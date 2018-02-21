@@ -1,0 +1,36 @@
+﻿<views:MvxWindowsPage
+    xmlns:views="using:MvvmCross.Uwp.Views"
+    x:Class="DeviceSimulator.MainPage" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DeviceSimulator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" PlaceholderText="IoT Hub Connection String" Text="{Binding IoTHubConnectionString, Mode=TwoWay}"/>
+            <Button Grid.Column="1" Background="Black" Foreground="White" Content="{Binding DeviceConnectionStatus, Mode=TwoWay}" Command="{Binding ConnectToIoTHubCommand}" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" PlaceholderText="Message Payload" Text="{Binding MessagePayload, Mode=TwoWay}" TextWrapping="Wrap"/>
+        </Grid>
+        <Button Grid.Row="2" Background="Black" Foreground="White" Content="Send Message" Command="{Binding SendMessageCommand}" />
+        <TextBlock Grid.Row="3" Text="{Binding DeviceStatus, Mode=TwoWay}"/>
+    </Grid>
+</views:MvxWindowsPage>
