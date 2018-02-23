@@ -23,6 +23,7 @@ namespace DeviceSimulator.Core
         {
             Mvx.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
             Mvx.LazyConstructAndRegisterSingleton<IConstantsService, ConstantsService>();
+            Mvx.LazyConstructAndRegisterSingleton<ITimerService, TimerService>();
         }
     }
 }

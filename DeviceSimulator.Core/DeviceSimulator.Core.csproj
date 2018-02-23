@@ -36,11 +36,16 @@
     <Compile Include="App.cs" />
     <Compile Include="Messages\DeviceConnectionChangedMessage.cs" />
     <Compile Include="Messages\DeviceStatusUpdatedMessage.cs" />
+    <Compile Include="Messages\StartTimeMessageService.cs" />
+    <Compile Include="Messages\StopTimerServiceMessage.cs" />
+    <Compile Include="Messages\TimerServiceTriggeredMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IConstantsService.cs" />
     <Compile Include="Services\IDeviceService.cs" />
     <Compile Include="Services\Implementations\ConstantsService.cs" />
     <Compile Include="Services\Implementations\DeviceService.cs" />
+    <Compile Include="Services\Implementations\TimerService.cs" />
+    <Compile Include="Services\ITimerService.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

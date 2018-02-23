@@ -107,7 +107,10 @@ namespace DeviceSimulator.Core
             {
                 return new MvxCommand(async () =>
                 {
-                    await _deviceService.SendRequest(MessagePayload);
+                    if (MessagePayload != null && MessagePayload.Trim().Count() > 0)
+                    {
+                        await _deviceService.SendRequest(MessagePayload);
+                    }
                 });
             }
         }
