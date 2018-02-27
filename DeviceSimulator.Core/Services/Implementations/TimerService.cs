@@ -26,7 +26,9 @@ namespace DeviceSimulator.Core
             _startTimerMessageToken = messageService.Subscribe<StartTimerServiceMessage>(StartTimer);
         }
 
-        public void Initialize(int intervalInMiliseconds)
+        public bool IsRunning => _isRunning;
+
+        public void Initialize()
         {
             if (!_isRunning)
             {
@@ -47,7 +49,7 @@ namespace DeviceSimulator.Core
                 _intervalInMiliseconds = message.IntervalInMiliseconds;
             }
 
-            Initialize(_intervalInMiliseconds);
+            Initialize();
         }
 
         private async void RunTimer()

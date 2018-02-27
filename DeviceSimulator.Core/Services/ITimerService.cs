@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
-    interface ITimerService
+    public interface ITimerService
     {
-        void Initialize(int intervalInMiliseconds);
+        bool IsRunning { get; }
+
+        void Initialize();
     }
 }

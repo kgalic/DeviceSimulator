@@ -9,6 +9,9 @@
     mc:Ignorable="d">
 
     <Grid Background="LightGray">
+        <Grid.Resources>
+            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
@@ -45,10 +48,17 @@
                      AcceptsReturn="True"
                      Text="{Binding MessagePayload, Mode=TwoWay}"/>
             </ScrollViewer>
+            <ScrollViewer
+                Grid.Column="1" 
+                VerticalScrollBarVisibility="Auto">
+                <TextBox 
+                    IsEnabled="False"
+                    TextWrapping="Wrap" 
+                    Text="{Binding DeviceStatus, Mode=TwoWay}"  />
+            </ScrollViewer>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -61,11 +71,16 @@
             <Button Grid.Column="1" 
                 Background="Black" 
                 Foreground="White" 
-                Content="Start Timer" 
-                Command="{Binding SendMessageCommand}" />
+                Content="{Binding TimerStatusTitle, Mode=TwoWay}" 
+                Command="{Binding StartTimerServiceCommand}" />
+            <Slider
+                Grid.Column="2"
+                Margin="0,0,10,0"
+                Visibility="{Binding IsDelayRangeVisible, Mode=OneWay, 
+                            Converter={StaticResource BoolToVisibilityConverter}}"
+                Minimum="{Binding TimerDelayMinimumValue, Mode=OneTime}" 
+                Maximum="{Binding TimerDelayMaximumValue, Mode=OneTime}" 
+                Value="{Binding DelayInSeconds, Mode=TwoWay}"/>
         </Grid>
-        <TextBox Grid.Row="3" 
-                 TextWrapping="Wrap" 
-                 Text="{Binding DeviceStatus, Mode=TwoWay}"  />
     </Grid>
 </views:MvxWindowsPage>
