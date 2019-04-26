@@ -1,4 +1,6 @@
-﻿using MvvmCross.Uwp.Views;
+﻿using DeviceSimulator.Core;
+using MvvmCross.Platforms.Uap.Views;
+using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +23,7 @@ namespace DeviceSimulator
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    [MvxViewFor(typeof(MainViewModel))]
     public sealed partial class MainPage : MvxWindowsPage
     {
         public MainPage()

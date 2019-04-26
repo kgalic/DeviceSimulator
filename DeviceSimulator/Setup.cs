@@ -1,8 +1,9 @@
-﻿using MvvmCross.Core.ViewModels;
-using MvvmCross.Platform;
-using MvvmCross.Platform.Logging;
-using MvvmCross.Plugins.Messenger;
-using MvvmCross.Uwp.Platform;
+﻿using MvvmCross;
+using MvvmCross.Logging;
+using MvvmCross.Platforms.Uap.Core;
+using MvvmCross.Plugin.Messenger;
+using MvvmCross.ViewModels;
+using MvvmCross.IoC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace DeviceSimulator
 {
-    public class Setup : MvxWindowsSetup
+    public class Setup : MvxWindowsSetup<Core.App>
     {
-        public Setup(Frame rootFrame) : base(rootFrame)
+        public Setup()
         {
         }
 
@@ -22,16 +23,12 @@ namespace DeviceSimulator
         {
             return new DeviceSimulator.Core.App();
         }
-        
-        protected override MvxLogProviderType GetDefaultLogProviderType()
-        {
-            return MvxLogProviderType.None;
-        }
+
         protected override void InitializeLastChance()
         {
             base.InitializeLastChance();
 
-            Mvx.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+            Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
         }
     }
 }

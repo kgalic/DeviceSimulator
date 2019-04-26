@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
-namespace DeviceSimulator
+namespace DeviceSimulator.Converters
 {
     public class BoolToVisibilityConverter : IValueConverter
     {
