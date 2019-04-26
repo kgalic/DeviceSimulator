@@ -1,5 +1,6 @@
-﻿using MvvmCross.Core.ViewModels;
-using MvvmCross.Platform;
+﻿using MvvmCross;
+using MvvmCross.IoC;
+using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +17,14 @@ namespace DeviceSimulator.Core
 
             RegisterServices();
 
-            RegisterNavigationServiceAppStart<MainViewModel>();
+            RegisterAppStart<MainViewModel>();
         }
 
         private void RegisterServices()
         {
-            Mvx.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
-            Mvx.LazyConstructAndRegisterSingleton<IConstantsService, ConstantsService>();
-            Mvx.LazyConstructAndRegisterSingleton<ITimerService, TimerService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IConstantsService, ConstantsService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITimerService, TimerService>();
         }
     }
 }

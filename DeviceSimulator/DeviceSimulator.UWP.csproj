@@ -143,13 +143,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeviceSimulator.Core2\DeviceSimulator.Core2.csproj">
-      <Project>{2d7296ff-19fd-4662-89dd-ff8efb9468fa}</Project>
-      <Name>DeviceSimulator.Core2</Name>
-    </ProjectReference>
+    <Folder Include="Bootstrap\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Bootstrap\" />
+    <ProjectReference Include="..\DeviceSimulator.Core\DeviceSimulator.Core.csproj">
+      <Project>{c08263df-bffd-4a8c-931f-0b1bbc97a97d}</Project>
+      <Name>DeviceSimulator.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

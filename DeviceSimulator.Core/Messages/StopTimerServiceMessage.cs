@@ -1,4 +1,4 @@
-﻿using MvvmCross.Plugins.Messenger;
+﻿using MvvmCross.Plugin.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
