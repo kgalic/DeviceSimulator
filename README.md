@@ -15,3 +15,5 @@ It is possible to use expression for generating random value(double or int). It 
    "Value":"rnd:25.0:30"
 }
 ```
+
+If min or max value contains comma, random generated value will be double, otherwise int.
