@@ -1,7 +1,9 @@
 ﻿using Microsoft.Azure.Devices.Client;
 using MvvmCross.Plugin.Messenger;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +13,17 @@ namespace DeviceSimulator.Core
     public class DeviceService : IDeviceService
     {
         private readonly IMvxMessenger _messageService;
+        private readonly IMessageExpressionService _messageExpressionService;
+
         private DeviceClient _deviceClient;
         private string _deviceStatus;
         private bool _isConnected;
 
-        public DeviceService(IMvxMessenger messageService)
+        public DeviceService(IMvxMessenger messageService,
+                             IMessageExpressionService messageExpressionService)
         {
-            this._messageService = messageService;
+            _messageExpressionService = messageExpressionService;
+            _messageService = messageService;
         }
 
         public async Task ConnectToDevice(string connectionString)
@@ -53,14 +59,17 @@ namespace DeviceSimulator.Core
 
         public async Task SendRequest(string message)
         {
+            message = _messageExpressionService.ParseMessageExpressions(message);
+
             byte[] data = Encoding.UTF8.GetBytes(message);
             var messageRequest = new Message(data)
             {
                 MessageId = Guid.NewGuid().ToString()
             };
+
             await _deviceClient.SendEventAsync(messageRequest);
 
-            _deviceStatus = "Message has been sent to IoT Hub";
+            _deviceStatus = $"Message has been sent to IoT Hub\n{message}\n";
             SendDeviceUpadtedMessage();
         }
 

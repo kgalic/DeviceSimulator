@@ -25,6 +25,7 @@ namespace DeviceSimulator.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IConstantsService, ConstantsService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITimerService, TimerService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IMessageExpressionService, MessageExpressionService>();
         }
     }
 }

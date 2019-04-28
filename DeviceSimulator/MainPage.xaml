@@ -49,11 +49,14 @@
                      Text="{Binding MessagePayload, Mode=TwoWay}"/>
             </ScrollViewer>
             <ScrollViewer
+                x:Name="DeviceStatusScrollView"
                 Grid.Column="1" 
                 VerticalScrollBarVisibility="Auto">
                 <TextBox 
+                    x:Name="DeviceStatusTxtBox"
                     IsEnabled="False"
                     TextWrapping="Wrap" 
+                    TextChanged="DeviceStatusTxtBox_TextChanged"
                     Text="{Binding DeviceStatus, Mode=TwoWay}"  />
             </ScrollViewer>
         </Grid>

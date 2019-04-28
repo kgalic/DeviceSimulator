@@ -30,6 +30,14 @@ namespace DeviceSimulator
         {
             this.InitializeComponent();
         }
-    }
 
+        private void DeviceStatusTxtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var scrollableHeight = DeviceStatusScrollView.ScrollableHeight;
+            if (scrollableHeight > 0)
+            {
+                DeviceStatusScrollView.ChangeView(DeviceStatusScrollView.HorizontalOffset, scrollableHeight, null);
+            }
+        }
+    }
 }
