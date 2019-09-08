@@ -13,7 +13,6 @@ namespace DeviceSimulator.Core
 
         Task SendRequest(string messge);
 
-        string Status { get; }
         bool IsConnected { get; }
     }
 }

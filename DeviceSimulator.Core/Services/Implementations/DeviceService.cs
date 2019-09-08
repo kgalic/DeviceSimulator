@@ -14,16 +14,18 @@ namespace DeviceSimulator.Core
     {
         private readonly IMvxMessenger _messageService;
         private readonly IMessageExpressionService _messageExpressionService;
+        private readonly IConsoleLoggerService _consoleLoggerService;
 
         private DeviceClient _deviceClient;
-        private string _deviceStatus;
         private bool _isConnected;
 
         public DeviceService(IMvxMessenger messageService,
-                             IMessageExpressionService messageExpressionService)
+                             IMessageExpressionService messageExpressionService,
+                             IConsoleLoggerService consoleLoggerService)
         {
             _messageExpressionService = messageExpressionService;
             _messageService = messageService;
+            _consoleLoggerService = consoleLoggerService;
         }
 
         public async Task ConnectToDevice(string connectionString)
@@ -36,10 +38,10 @@ namespace DeviceSimulator.Core
             }
             catch (Exception e)
             {
-                _deviceStatus = string.Format("IoT hub cannot be reached\n{0}", e.Message);
+                _consoleLoggerService.Log(string.Format("IoT hub cannot be reached\n{0}", e.Message));
                 _isConnected = false;
             }
-            SendDeviceUpadtedMessage();
+
             SendDeviceConnectionChangedMessage();
         }
 
@@ -47,13 +49,10 @@ namespace DeviceSimulator.Core
         {
             await _deviceClient.CloseAsync();
             _isConnected = false;
-            _deviceStatus = "Device Disconnected";
-            
-            SendDeviceUpadtedMessage();
+            _consoleLoggerService.Log("Device Disconnected");
+
             SendDeviceConnectionChangedMessage();
         }
-
-        public string Status => _deviceStatus;
        
         public bool IsConnected => _isConnected;
 
@@ -69,20 +68,14 @@ namespace DeviceSimulator.Core
 
             await _deviceClient.SendEventAsync(messageRequest);
 
-            _deviceStatus = $"Message has been sent to IoT Hub\n{message}\n";
-            SendDeviceUpadtedMessage();
+            _consoleLoggerService.Log($"Message has been sent to IoT Hub\n{message}\n");
         }
 
         private async Task InitializeDevice()
         {
             await _deviceClient.OpenAsync();
-            _deviceStatus = "Device Connected";
+            _consoleLoggerService.Log("Device Connected");
             _isConnected = true;
-        }
-
-        private void SendDeviceUpadtedMessage()
-        {
-            _messageService.Publish(new DeviceStatusUpdatedMessage(this, _deviceStatus));
         }
 
         private void SendDeviceConnectionChangedMessage()

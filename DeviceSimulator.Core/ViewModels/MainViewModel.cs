@@ -46,7 +46,7 @@ namespace DeviceSimulator.Core
             TimerStatusTitle = StartTimerTitle;
             _delayInSeconds = SliderMinimum;
 
-            DeviceStatus = _deviceService.Status ?? string.Empty;
+            DeviceStatus = string.Empty;
             SetDeviceConnectionStatusForStatus(_deviceService.IsConnected);
 
             _deviceStatusChangedMessageToken = messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
