@@ -19,6 +19,8 @@ namespace DeviceSimulator.Core
         private DeviceClient _deviceClient;
         private bool _isConnected;
 
+        private IDictionary<string, MethodCallback> _directMethodDictionary;
+
         public DeviceService(IMvxMessenger messageService,
                              IMessageExpressionService messageExpressionService,
                              IConsoleLoggerService consoleLoggerService)
@@ -69,6 +71,25 @@ namespace DeviceSimulator.Core
             await _deviceClient.SendEventAsync(messageRequest);
 
             _consoleLoggerService.Log($"Message has been sent to IoT Hub\n{message}\n");
+        }
+
+        public async Task RegisterDirectMethodAsync(string methodName)
+        {
+            if (_directMethodDictionary == null)
+            {
+                _directMethodDictionary = new Dictionary<string, MethodCallback>();
+            }
+            if (!string.IsNullOrEmpty(methodName) && !_directMethodDictionary.ContainsKey(methodName))
+            {
+                MethodCallback callbackMethod = delegate (MethodRequest methodRequest, object userContext)
+                {
+                    _consoleLoggerService.Log($"Executed {methodName}\n");
+                    return Task.FromResult(new MethodResponse(200));
+                };
+                _directMethodDictionary.Add(methodName, callbackMethod);
+
+                await _deviceClient.SetMethodHandlerAsync(methodName: methodName, callbackMethod, null);
+            }
         }
 
         private async Task InitializeDevice()

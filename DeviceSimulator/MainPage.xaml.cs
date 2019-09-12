@@ -1,4 +1,5 @@
 ﻿using DeviceSimulator.Core;
+using DeviceSimulator.Views;
 using MvvmCross.Platforms.Uap.Views;
 using MvvmCross.ViewModels;
 using System;
@@ -8,12 +9,15 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -30,14 +34,21 @@ namespace DeviceSimulator
         {
             this.InitializeComponent();
         }
-
-        private void DeviceStatusTxtBox_TextChanged(object sender, TextChangedEventArgs e)
+ 
+        private void NavView_ItemInvoked(NavigationView sender,
+                                         NavigationViewItemInvokedEventArgs args)
         {
-            var scrollableHeight = DeviceStatusScrollView.ScrollableHeight;
-            if (scrollableHeight > 0)
+            if (args.IsSettingsInvoked == true)
             {
-                DeviceStatusScrollView.ChangeView(DeviceStatusScrollView.HorizontalOffset, scrollableHeight, null);
+            }
+            else if (args.InvokedItemContainer != null)
+            {
+                var navItemTag = args.InvokedItemContainer.Tag.ToString();
+                (ViewModel as MainViewModel)?.ItemInvokedCommand.Execute(navItemTag);
             }
         }
+
+        public Frame MainContentFrame => this.ContentFrame;
+
     }
 }

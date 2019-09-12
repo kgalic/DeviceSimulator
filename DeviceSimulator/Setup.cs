@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using MvvmCross.Platforms.Uap.Presenters;
+using MvvmCross.Platforms.Uap.Views;
 
 namespace DeviceSimulator
 {
@@ -17,6 +19,11 @@ namespace DeviceSimulator
     {
         public Setup()
         {
+        }
+
+        protected override IMvxWindowsViewPresenter CreateViewPresenter(IMvxWindowsFrame rootFrame)
+        {
+            return new MvxWindowsViewPresenter(rootFrame);
         }
 
         protected override IMvxApplication CreateApp()

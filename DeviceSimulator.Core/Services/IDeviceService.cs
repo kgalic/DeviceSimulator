@@ -13,6 +13,8 @@ namespace DeviceSimulator.Core
 
         Task SendRequest(string messge);
 
+        Task RegisterDirectMethodAsync(string methodName);
+
         bool IsConnected { get; }
     }
 }
