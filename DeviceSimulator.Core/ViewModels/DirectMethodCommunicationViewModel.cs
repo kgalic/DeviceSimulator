@@ -1,5 +1,7 @@
-﻿using MvvmCross;
+﻿using DeviceSimulator.Core.Messages;
+using MvvmCross;
 using MvvmCross.Commands;
+using MvvmCross.Plugin.Messenger;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections;
@@ -18,18 +20,24 @@ namespace DeviceSimulator.Core
 
         private readonly ObservableCollection<DirectMethodSetting> _directMethods;
 
+        private MvxSubscriptionToken _directMethodStatusChangedMessageToken;
+
         private string _directMethodEntry;
+        private string _status = string.Empty;
 
         #endregion
 
         #region Constructors & Lifecycle
 
         public DirectMethodCommunicationViewModel(IDeviceService deviceService,
-                                                  ITranslationsService translationsService)
+                                                  ITranslationsService translationsService,
+                                                  IMvxMessenger messageService)
         {
             _directMethods = new ObservableCollection<DirectMethodSetting>();
             _deviceService = deviceService;
             _translationsService = translationsService;
+
+            _directMethodStatusChangedMessageToken = messageService.Subscribe<DirectMethodStatusUpdatedMessage>(HandleDirectMethodStatusChanged);
         }
 
         #endregion
@@ -44,6 +52,16 @@ namespace DeviceSimulator.Core
             set
             {
                 _directMethodEntry = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                _status = value;
                 RaisePropertyChanged();
             }
         }
@@ -79,22 +97,21 @@ namespace DeviceSimulator.Core
                 {
                     var directMethod = new DirectMethodSetting(DirectMethodEntry)
                     {
-                        CommandString = "Register"
+                        CommandString = _translationsService.GetString("RegisterMethod")
                     };
-                    var command = new MvxCommand(() =>
+                    var command = new MvxCommand(async () =>
                     {
-                        var aa = directMethod.Delay;
                         if (directMethod.IsEnabled)
                         {
-                            directMethod.CommandString = "Unregister";
+                            directMethod.CommandString = _translationsService.GetString("UnregisterMethod"); 
                             directMethod.IsEnabled = false;
-                            _deviceService.RegisterDirectMethodAsync(DirectMethodEntry);
+                            await _deviceService.RegisterDirectMethodAsync(directMethod);
                         }
                         else
                         {
-                            directMethod.CommandString = "Register";
+                            directMethod.CommandString = _translationsService.GetString("RegisterMethod");
                             directMethod.IsEnabled = true;
-                            _deviceService.UnregisterDirectMethodAsync(DirectMethodEntry);
+                            await _deviceService.UnregisterDirectMethodAsync(directMethod.DirectMethodName);
                         }
                     });
                     directMethod.RegisterCommand = command;
@@ -103,6 +120,18 @@ namespace DeviceSimulator.Core
                     RaisePropertyChanged(() => DirectMethods);
                 }
             });
+        }
+
+        #endregion
+
+        #region Private
+
+        private void HandleDirectMethodStatusChanged(DirectMethodStatusUpdatedMessage message)
+        {
+            if (!string.IsNullOrEmpty(message.Status))
+            {
+                Status += message.Status;
+            }
         }
 
         #endregion

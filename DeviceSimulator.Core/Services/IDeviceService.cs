@@ -13,9 +13,9 @@ namespace DeviceSimulator.Core
 
         Task SendRequest(string messge);
 
-        Task RegisterDirectMethodAsync(string methodName);
+        Task RegisterDirectMethodAsync(DirectMethodSetting directMethod);
 
-        void UnregisterDirectMethodAsync(string methodName);
+        Task UnregisterDirectMethodAsync(string methodName);
 
         bool IsConnected { get; }
     }

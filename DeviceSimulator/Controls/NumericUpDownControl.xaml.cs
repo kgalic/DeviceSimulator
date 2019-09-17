@@ -31,21 +31,25 @@ namespace DeviceSimulator.Controls
             set { SetValue(IsControlEnabledProperty, value); }
         }
 
-        public string CounterName
-        {
-            get { return (string)GetValue(CounterNameProperty); }
-            set { SetValue(CounterNameProperty, value); }
-        }
-
         public int NumericCounter
         {
             get { return (int)GetValue(NumericCounterProperty); }
             set { SetValue(NumericCounterProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for NumericCounter.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CounterNameProperty =
-            DependencyProperty.Register("CounterName", typeof(string), typeof(NumericUpDownControl), new PropertyMetadata(0));
+        public string ControlTitle
+        {
+            get { return (string)GetValue(ControlTitleProperty); }
+            set { SetValue(ControlTitleProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ControlTitle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ControlTitleProperty =
+            DependencyProperty.Register("ControlTitle", typeof(string), typeof(NumericUpDownControl), new PropertyMetadata(0));
+
+
+
+        // Using a DependencyProperty as the backing store for NumericCounter.  This enables animation, styling, binding, etc..
 
         public static readonly DependencyProperty NumericCounterProperty =
             DependencyProperty.Register("NumericCounter", typeof(int), typeof(NumericUpDownControl), new PropertyMetadata(0));

@@ -1,4 +1,5 @@
 ﻿<views:MvxWindowsPage
+    x:Name="DirectMethodPage"
     xmlns:views="using:MvvmCross.Platforms.Uap.Views" 
     xmlns:local="using:DeviceSimulator.Controls"
     x:Class="DeviceSimulator.Views.DirectMethodCommunicationView"
@@ -36,19 +37,28 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ListView ItemsSource="{Binding DirectMethods}">
-                <ListView.ItemTemplate>
+            <ListView ItemsSource="{Binding DirectMethods}" 
+                      SelectionMode="None">
+                <ListView.ItemTemplate >
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
+                        <StackPanel HorizontalAlignment="Right"
+                                    Orientation="Horizontal">
                             <TextBlock Text="{Binding DirectMethodName, Mode=TwoWay}"
+                                       Width="200"
+                                       TextAlignment="Right"
                                        Margin="10,10,10,10"/>
-                            <Button Content="{Binding CommandString, Mode=TwoWay}"
-                                    Command="{Binding RegisterCommand}" />
-                            <local:NumericUpDownControl 
-                                CounterName="{Binding DelayString}"
-                                NumericCounter="{Binding Delay, Mode=TwoWay}"
-                                IsControlEnabled="{Binding IsEnabled, Mode=TwoWay}"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Grid.Column="1">
+                                <Button Content="{Binding CommandString, Mode=TwoWay}"
+                                            Width="100"
+                                            Command="{Binding RegisterCommand}" />
+                                <local:NumericUpDownControl  ControlTitle="{Binding DataContext.DelayString, ElementName=DirectMethodPage}"
+                                                             NumericCounter="{Binding Delay, Mode=TwoWay}"
+                                                             IsControlEnabled="{Binding IsEnabled, Mode=TwoWay}"/>
+                            </StackPanel>
                         </StackPanel>
+                        
+                       
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -60,7 +70,7 @@
                     x:Name="DirectMethodStatusTxtBox"
                     IsEnabled="False"
                     TextWrapping="Wrap" 
-                    Text="{Binding DeviceStatus, Mode=TwoWay}"  />
+                    Text="{Binding Status, Mode=TwoWay}"  />
             </ScrollViewer>
         </Grid>
     </Grid>

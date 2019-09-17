@@ -7,5 +7,7 @@ namespace DeviceSimulator.Core
     public interface IConsoleLoggerService
     {
         void Log(string value);
+
+        void LogDirectMethod(string value);
     }
 }

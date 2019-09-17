@@ -15,8 +15,13 @@
   <!-- Direct Method View -->
   <string name="DirectMethodName">Direct Method Name</string>
   <string name="AddDirectMethod">Add Direct Method</string>
-  <string name="Delay">Delay (s)</string>
+  <string name="Delay">Delay in seconds:</string>
+  <string name="MethodExecuting">Executing {0}{1}</string>
   <string name="MethodExecuted">Executed {0}{1}</string>
+  <string name="MethodRegistered">Registered method: {0}{1}</string>
+  <string name="MethodUnregistered">Unregistered method: {0}{1}</string>
+  <string name="RegisterMethod">Register</string>
+  <string name="UnregisterMethod">Unregister</string>
 
   <!-- Exception Messages -->
   <string name="SendingD2CMessageException">Exception occured while sending D2C Message!</string>

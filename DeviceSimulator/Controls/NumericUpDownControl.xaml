@@ -20,12 +20,14 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" 
+        <TextBlock x:Name="DelayTitleTxtBlock"
+                   Grid.Column="0" 
                    Margin="10,10,10,10"
-                   Text="{Binding CounterName, ElementName=NumericControl}" />
+                   Text="{Binding ControlTitle, ElementName=NumericControl}" />
         <TextBox x:Name="NumberTxtBox"
                  Margin="5,5,5,5"
                  TextAlignment="Center"
+                 Width="50"
                  Grid.Row="0"
                  Grid.Column="1"
                  Text="{Binding NumericCounter, ElementName=NumericControl}"/>

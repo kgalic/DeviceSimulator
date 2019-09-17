@@ -48,17 +48,14 @@ namespace DeviceSimulator.Core
                                                         e.Message));
                 _isConnected = false;
             }
-
-            SendDeviceConnectionChangedMessage();
         }
 
         public async Task DisconnectFromDevice()
         {
             await _deviceClient.CloseAsync();
             _isConnected = false;
-            _consoleLoggerService.Log(_translationsService.GetString("DeviceDisconnected"));
 
-            SendDeviceConnectionChangedMessage();
+            _consoleLoggerService.Log(_translationsService.GetString("DeviceDisconnected"));
         }
        
         public bool IsConnected => _isConnected;
@@ -81,36 +78,54 @@ namespace DeviceSimulator.Core
                                                     Environment.NewLine));
         }
 
-        public async Task RegisterDirectMethodAsync(string methodName)
+        public async Task RegisterDirectMethodAsync(DirectMethodSetting directMethod)
         {
             if (_directMethodDictionary == null)
             {
                 _directMethodDictionary = new Dictionary<string, MethodCallback>();
             }
+
+            var methodName = directMethod.DirectMethodName;
             if (!string.IsNullOrEmpty(methodName) && !_directMethodDictionary.ContainsKey(methodName))
             {
-                MethodCallback callbackMethod = delegate (MethodRequest methodRequest, object userContext)
+                MethodCallback callbackMethod = async delegate (MethodRequest methodRequest, object userContext)
                 {
-                    _consoleLoggerService.Log(string.Format(_translationsService.GetString("MethodExecuted"), 
-                                                            methodName,
-                                                            Environment.NewLine));
-                    return Task.FromResult(new MethodResponse(200));
+                    _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodExecuting"),
+                                                          methodName,
+                                                          Environment.NewLine));
+
+                    await Task.Delay(TimeSpan.FromSeconds(directMethod.Delay));
+
+                    _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodExecuted"), 
+                                                          methodName,
+                                                          Environment.NewLine));
+
+                    return new MethodResponse(200);
                 };
-                _directMethodDictionary.Add(methodName, callbackMethod);
 
                 await _deviceClient.SetMethodHandlerAsync(methodName: methodName, callbackMethod, null);
+
+                _directMethodDictionary.Add(methodName, callbackMethod);
+                _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodRegistered"),
+                                                      methodName,
+                                                      Environment.NewLine));
             }
         }
 
-        public void UnregisterDirectMethodAsync(string methodName)
+        public async Task UnregisterDirectMethodAsync(string methodName)
         {
             if (_directMethodDictionary == null)
             {
                 return;
             }
+
             if (!string.IsNullOrEmpty(methodName) && _directMethodDictionary.ContainsKey(methodName))
             {
+                await _deviceClient.SetMethodHandlerAsync(methodName: methodName, null, null);
                 _directMethodDictionary.Remove(methodName);
+                _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodUnregistered"),
+                                                      methodName,
+                                                      Environment.NewLine));
             }
         }
 
@@ -119,11 +134,6 @@ namespace DeviceSimulator.Core
             await _deviceClient.OpenAsync();
             _consoleLoggerService.Log(_translationsService.GetString("DeviceConnected"));
             _isConnected = true;
-        }
-
-        private void SendDeviceConnectionChangedMessage()
-        {
-            _messageService.Publish(new DeviceConnectionChangedMessage(this, _isConnected));
         }
     }
 }

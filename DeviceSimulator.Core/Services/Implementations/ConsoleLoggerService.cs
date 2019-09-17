@@ -1,4 +1,5 @@
-﻿using MvvmCross.Plugin.Messenger;
+﻿using DeviceSimulator.Core.Messages;
+using MvvmCross.Plugin.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,6 +28,11 @@ namespace DeviceSimulator.Core
         public void Log(string value)
         {
             _messageService.Publish(new DeviceStatusUpdatedMessage(this, value));
+        }
+
+        public void LogDirectMethod(string value)
+        {
+            _messageService.Publish(new DirectMethodStatusUpdatedMessage(this, value));
         }
 
         #endregion
