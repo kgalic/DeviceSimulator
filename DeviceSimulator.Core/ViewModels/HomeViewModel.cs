@@ -13,15 +13,13 @@ namespace DeviceSimulator.Core.ViewModels
     {
         #region Fields
 
-        private const string StopTimerTitle = "Stop Timer";
-        private const string StartTimerTitle = "Start Timer";
-
         public const int SliderMinimum = 1;
         public const int SliderMaximum = 10;
 
         private readonly IDeviceService _deviceService;
         private readonly ITimerService _timerService;
         private readonly IMvxMessenger _messageService;
+        private readonly ITranslationsService _translationsService;
 
         private MvxSubscriptionToken _deviceStatusChangedMessageToken;
         private MvxSubscriptionToken _deviceConnectionStatusChangedMessageToken;
@@ -43,13 +41,15 @@ namespace DeviceSimulator.Core.ViewModels
 
         public HomeViewModel(IDeviceService deviceService,
             ITimerService timerService,
-            IMvxMessenger messageService)
+            IMvxMessenger messageService,
+            ITranslationsService translationsService)
         {
             _deviceService = deviceService;
             _timerService = timerService;
             _messageService = messageService;
+            _translationsService = translationsService;
 
-            TimerStatusTitle = StartTimerTitle;
+            TimerStatusTitle = _translationsService.GetString("StartTimer"); ;
             _delayInSeconds = SliderMinimum;
 
             DeviceStatus = string.Empty;
@@ -174,6 +174,25 @@ namespace DeviceSimulator.Core.ViewModels
 
         #endregion
 
+        #region Translations
+
+        public string IoTHubConnectionStringPlaceholder
+        {
+            get => _translationsService.GetString("IoTHubConnectionString");
+        }
+
+        public string MessagePayloadPlaceholder
+        {
+            get => _translationsService.GetString("MessagePayload");
+        }
+
+        public string SendMessageString
+        {
+            get => _translationsService.GetString("SendMessage");
+        }
+
+        #endregion
+
         #region Commands
 
         public IMvxCommand ConnectToIoTHubCommand
@@ -214,13 +233,13 @@ namespace DeviceSimulator.Core.ViewModels
                     if (_timerService.IsRunning)
                     {
                         _messageService.Publish(new StopTimerServiceMessage(this));
-                        TimerStatusTitle = StartTimerTitle;
+                        TimerStatusTitle = _translationsService.GetString("StartTimer");
                         IsDelayRangeVisible = false;
                     }
                     else
                     {
                         _messageService.Publish(new StartTimerServiceMessage(this));
-                        TimerStatusTitle = StopTimerTitle;
+                        TimerStatusTitle = _translationsService.GetString("StopTimer");
                         IsDelayRangeVisible = true;
                     }
                 });
@@ -246,7 +265,8 @@ namespace DeviceSimulator.Core.ViewModels
 
         private void SetDeviceConnectionStatusForStatus(bool isConnected)
         {
-            DeviceConnectionStatus = isConnected ? "Disconnect" : "Connect";
+            DeviceConnectionStatus = isConnected ? _translationsService.GetString("Disconnect") 
+                                                 : _translationsService.GetString("Connect");
         }
 
         private void HandleTimerTrigger(MvxMessage message)
@@ -265,7 +285,7 @@ namespace DeviceSimulator.Core.ViewModels
             }
             catch
             {
-                Console.WriteLine("Exception occured while sending D2C Message!");
+                Console.WriteLine(_translationsService.GetString("SendingD2CMessageException"));
             }
         }
 

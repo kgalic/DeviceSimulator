@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" 
-                     PlaceholderText="IoT Hub Connection String" 
+                     PlaceholderText="{Binding IoTHubConnectionStringPlaceholder}" 
                      Text="{Binding IoTHubConnectionString, Mode=TwoWay}"/>
             <Button Grid.Column="1" 
                     Background="Black" 
@@ -44,7 +44,7 @@
                 VerticalScrollBarVisibility="Auto">
                 <TextBox 
                      x:Name="MessagePayloadTextBox"
-                     PlaceholderText="Message Payload" 
+                     PlaceholderText="{Binding MessagePayloadPlaceholder}" 
                      TextWrapping="Wrap" 
                      AcceptsReturn="True"
                      Text="{Binding MessagePayload, Mode=TwoWay}"/>
@@ -70,7 +70,7 @@
             <Button Grid.Column="0" 
                 Background="Black" 
                 Foreground="White" 
-                Content="Send Message" 
+                Content="{Binding SendMessageString}" 
                 Command="{Binding SendMessageCommand}" />
             <Button Grid.Column="1" 
                 Background="Black" 

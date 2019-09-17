@@ -14,6 +14,7 @@ namespace DeviceSimulator.Core
         #region Fields
 
         private readonly IDeviceService _deviceService;
+        private readonly ITranslationsService _translationsService;
 
         private readonly ObservableCollection<DirectMethodSetting> _directMethods;
 
@@ -23,10 +24,12 @@ namespace DeviceSimulator.Core
 
         #region Constructors & Lifecycle
 
-        public DirectMethodCommunicationViewModel(IDeviceService deviceService)
+        public DirectMethodCommunicationViewModel(IDeviceService deviceService,
+                                                  ITranslationsService translationsService)
         {
             _directMethods = new ObservableCollection<DirectMethodSetting>();
             _deviceService = deviceService;
+            _translationsService = translationsService;
         }
 
         #endregion
@@ -43,6 +46,25 @@ namespace DeviceSimulator.Core
                 _directMethodEntry = value;
                 RaisePropertyChanged();
             }
+        }
+
+        #endregion
+
+        #region Translations
+
+        public string DirectMethodNamePlaceholder
+        {
+            get => _translationsService.GetString("DirectMethodName");
+        }
+
+        public string AddDirectMethodString
+        {
+            get => _translationsService.GetString("AddDirectMethod");
+        }
+
+        public string DelayString
+        {
+            get => _translationsService.GetString("Delay");
         }
 
         #endregion

@@ -15,6 +15,7 @@ namespace DeviceSimulator.Core
         private readonly IMvxMessenger _messageService;
         private readonly IMessageExpressionService _messageExpressionService;
         private readonly IConsoleLoggerService _consoleLoggerService;
+        private readonly ITranslationsService _translationsService;
 
         private DeviceClient _deviceClient;
         private bool _isConnected;
@@ -23,11 +24,13 @@ namespace DeviceSimulator.Core
 
         public DeviceService(IMvxMessenger messageService,
                              IMessageExpressionService messageExpressionService,
-                             IConsoleLoggerService consoleLoggerService)
+                             IConsoleLoggerService consoleLoggerService,
+                             ITranslationsService translationsService)
         {
             _messageExpressionService = messageExpressionService;
             _messageService = messageService;
             _consoleLoggerService = consoleLoggerService;
+            _translationsService = translationsService;
         }
 
         public async Task ConnectToDevice(string connectionString)
@@ -40,7 +43,9 @@ namespace DeviceSimulator.Core
             }
             catch (Exception e)
             {
-                _consoleLoggerService.Log(string.Format("IoT hub cannot be reached\n{0}", e.Message));
+                _consoleLoggerService.Log(string.Format(_translationsService.GetString("IoTHubNotReachableMessageException"), 
+                                                        Environment.NewLine,
+                                                        e.Message));
                 _isConnected = false;
             }
 
@@ -51,7 +56,7 @@ namespace DeviceSimulator.Core
         {
             await _deviceClient.CloseAsync();
             _isConnected = false;
-            _consoleLoggerService.Log("Device Disconnected");
+            _consoleLoggerService.Log(_translationsService.GetString("DeviceDisconnected"));
 
             SendDeviceConnectionChangedMessage();
         }
@@ -70,7 +75,10 @@ namespace DeviceSimulator.Core
 
             await _deviceClient.SendEventAsync(messageRequest);
 
-            _consoleLoggerService.Log($"Message has been sent to IoT Hub\n{message}\n");
+            _consoleLoggerService.Log(string.Format(_translationsService.GetString("MessageSent"), 
+                                                    Environment.NewLine,
+                                                    message,
+                                                    Environment.NewLine));
         }
 
         public async Task RegisterDirectMethodAsync(string methodName)
@@ -83,7 +91,9 @@ namespace DeviceSimulator.Core
             {
                 MethodCallback callbackMethod = delegate (MethodRequest methodRequest, object userContext)
                 {
-                    _consoleLoggerService.Log($"Executed {methodName}\n");
+                    _consoleLoggerService.Log(string.Format(_translationsService.GetString("MethodExecuted"), 
+                                                            methodName,
+                                                            Environment.NewLine));
                     return Task.FromResult(new MethodResponse(200));
                 };
                 _directMethodDictionary.Add(methodName, callbackMethod);
@@ -107,7 +117,7 @@ namespace DeviceSimulator.Core
         private async Task InitializeDevice()
         {
             await _deviceClient.OpenAsync();
-            _consoleLoggerService.Log("Device Connected");
+            _consoleLoggerService.Log(_translationsService.GetString("DeviceConnected"));
             _isConnected = true;
         }
 

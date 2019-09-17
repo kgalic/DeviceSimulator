@@ -23,12 +23,12 @@
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" 
-                     PlaceholderText="Direct Method Name" 
+                     PlaceholderText="{Binding DirectMethodNamePlaceholder}" 
                      Text="{Binding DirectMethodEntry, Mode=TwoWay}"/>
             <Button Grid.Column="1" 
                     Background="Black" 
                     Foreground="White" 
-                    Content="Add Direct Method" 
+                    Content="{Binding AddDirectMethodString}" 
                     Command="{Binding AddDirectMethodCommand}"/>
         </Grid>
         <Grid Grid.Row="1">
@@ -45,7 +45,7 @@
                             <Button Content="{Binding CommandString, Mode=TwoWay}"
                                     Command="{Binding RegisterCommand}" />
                             <local:NumericUpDownControl 
-                                CounterName="Delay"
+                                CounterName="{Binding DelayString}"
                                 NumericCounter="{Binding Delay, Mode=TwoWay}"
                                 IsControlEnabled="{Binding IsEnabled, Mode=TwoWay}"/>
                         </StackPanel>

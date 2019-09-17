@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Home View -->
+	<string name="StopTimer">Stop Timer</string>
+  <string name="StartTimer">Start Timer</string>
+  <string name="Connect">Connect</string>
+  <string name="Disconnet">Disconnet</string>
+  <string name="IoTHubConnectionString">IoT Hub Connection String</string>
+  <string name="MessagePayload">Message Payload</string>
+  <string name="SendMessage">Send Message</string>
+  <string name="DeviceConnected">Device Connected</string>
+  <string name="DeviceDisconnected">Device Disconnected</string>
+  <string name="MessageSent">Message has been sent to IoT Hub{0}{1}{2}</string>
+
+  <!-- Direct Method View -->
+  <string name="DirectMethodName">Direct Method Name</string>
+  <string name="AddDirectMethod">Add Direct Method</string>
+  <string name="Delay">Delay (s)</string>
+  <string name="MethodExecuted">Executed {0}{1}</string>
+
+  <!-- Exception Messages -->
+  <string name="SendingD2CMessageException">Exception occured while sending D2C Message!</string>
+  <string name="IoTHubNotReachableMessageException">IoT hub cannot be reached{0}{1}</string>
+</resources>

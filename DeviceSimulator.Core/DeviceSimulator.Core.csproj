@@ -10,4 +10,10 @@
     <PackageReference Include="MvvmCross.Plugin.Messenger" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Translations\Strings.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

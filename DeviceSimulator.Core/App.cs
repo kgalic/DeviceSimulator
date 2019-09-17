@@ -20,6 +20,12 @@ namespace DeviceSimulator.Core
             RegisterAppStart<MainViewModel>();
         }
 
+        public override Task Startup()
+        {
+            Mvx.IoCProvider.Resolve<ITranslationsService>().LoadTranslations();
+            return base.Startup();
+        }
+
         private void RegisterServices()
         {
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
@@ -27,6 +33,7 @@ namespace DeviceSimulator.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITimerService, TimerService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IMessageExpressionService, MessageExpressionService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IConsoleLoggerService, ConsoleLoggerService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITranslationsService, TranslationsService>();
         }
     }
 }
