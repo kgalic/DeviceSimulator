@@ -35,7 +35,7 @@ namespace DeviceSimulator.Core.ViewModels
 
         private int _delayInSeconds;
 
-        private bool _isDelayRangeVisible;
+        private bool _isDelayRangeVisible = true;
 
         #endregion
 
@@ -194,12 +194,15 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
-        public IMvxCommand GetSendMessageCommand()
+        public IMvxCommand SendMessageCommand
         {
-            return new MvxCommand(async () =>
+            get
             {
-                await SendMessagePayload();
-            });
+                return new MvxCommand(async () =>
+                {
+                    await SendMessagePayload();
+                });
+            }
         }
 
         public IMvxCommand StartTimerServiceCommand

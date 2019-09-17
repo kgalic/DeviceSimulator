@@ -15,6 +15,8 @@ namespace DeviceSimulator.Core
 
         Task RegisterDirectMethodAsync(string methodName);
 
+        void UnregisterDirectMethodAsync(string methodName);
+
         bool IsConnected { get; }
     }
 }

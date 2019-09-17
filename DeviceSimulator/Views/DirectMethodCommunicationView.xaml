@@ -1,6 +1,6 @@
 ﻿<views:MvxWindowsPage
     xmlns:views="using:MvvmCross.Platforms.Uap.Views" 
-    xmlns:local="using:DeviceSimulator.Converters"
+    xmlns:local="using:DeviceSimulator.Controls"
     x:Class="DeviceSimulator.Views.DirectMethodCommunicationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -10,6 +10,58 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <Grid.Resources>
+            <local:NumericUpDownControl x:Key="NumericUpDownControl" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" 
+                     PlaceholderText="Direct Method Name" 
+                     Text="{Binding DirectMethodEntry, Mode=TwoWay}"/>
+            <Button Grid.Column="1" 
+                    Background="Black" 
+                    Foreground="White" 
+                    Content="Add Direct Method" 
+                    Command="{Binding AddDirectMethodCommand}"/>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ListView ItemsSource="{Binding DirectMethods}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding DirectMethodName, Mode=TwoWay}"
+                                       Margin="10,10,10,10"/>
+                            <Button Content="{Binding CommandString, Mode=TwoWay}"
+                                    Command="{Binding RegisterCommand}" />
+                            <local:NumericUpDownControl 
+                                CounterName="Delay"
+                                NumericCounter="{Binding Delay, Mode=TwoWay}"
+                                IsControlEnabled="{Binding IsEnabled, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ScrollViewer
+                x:Name="DirectMethodStatusScrollView"
+                Grid.Column="1" 
+                VerticalScrollBarVisibility="Auto">
+                <TextBox 
+                    x:Name="DirectMethodStatusTxtBox"
+                    IsEnabled="False"
+                    TextWrapping="Wrap" 
+                    Text="{Binding DeviceStatus, Mode=TwoWay}"  />
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </views:MvxWindowsPage>

@@ -92,6 +92,18 @@ namespace DeviceSimulator.Core
             }
         }
 
+        public void UnregisterDirectMethodAsync(string methodName)
+        {
+            if (_directMethodDictionary == null)
+            {
+                return;
+            }
+            if (!string.IsNullOrEmpty(methodName) && _directMethodDictionary.ContainsKey(methodName))
+            {
+                _directMethodDictionary.Remove(methodName);
+            }
+        }
+
         private async Task InitializeDevice()
         {
             await _deviceClient.OpenAsync();
