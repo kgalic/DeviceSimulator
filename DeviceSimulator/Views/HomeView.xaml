@@ -65,26 +65,58 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" 
-                Background="Black" 
-                Foreground="White" 
-                Content="{Binding SendMessageString}" 
-                Command="{Binding SendMessageCommand}" />
-            <Button Grid.Column="1" 
-                Background="Black" 
-                Foreground="White" 
-                Content="{Binding TimerStatusTitle, Mode=TwoWay}" 
-                Command="{Binding StartTimerServiceCommand}" />
-            <Slider
-                Grid.Column="2"
-                Margin="0,0,10,0"
-                Visibility="{Binding IsDelayRangeVisible, Mode=OneWay, 
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" 
+                        Background="Black" 
+                        Foreground="White" 
+                        Content="{Binding SendMessageString}" 
+                        Command="{Binding SendMessageCommand}" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Background="Black" 
+                                Foreground="White" 
+                                Grid.Column="0"
+                                Content="{Binding SaveString, Mode=TwoWay}" 
+                                Command="{Binding SaveSettingsCommand}" />
+                        <Button Background="Black" 
+                                Foreground="White" 
+                                Grid.Column="1"
+                                Content="{Binding LoadString, Mode=TwoWay}" 
+                                Command="{Binding LoadSettingsCommand}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Background="Black" 
+                        Foreground="White" 
+                        Grid.Column="0"
+                        Content="{Binding TimerStatusTitle, Mode=TwoWay}" 
+                        Command="{Binding StartTimerServiceCommand}" />
+                <Slider Margin="0,0,10,0"
+                        Grid.Column="1"
+                        Visibility="{Binding IsDelayRangeVisible, Mode=OneWay, 
                             Converter={StaticResource BoolToVisibilityConverter}}"
-                Minimum="{Binding TimerDelayMinimumValue, Mode=OneTime}" 
-                Maximum="{Binding TimerDelayMaximumValue, Mode=OneTime}" 
-                Value="{Binding DelayInSeconds, Mode=TwoWay}"/>
+                        Minimum="{Binding TimerDelayMinimumValue, Mode=OneTime}" 
+                        Maximum="{Binding TimerDelayMaximumValue, Mode=OneTime}" 
+                        Value="{Binding DelayInSeconds, Mode=TwoWay}"/>
+            </Grid>
         </Grid>
     </Grid>
 </views:MvxWindowsPage>

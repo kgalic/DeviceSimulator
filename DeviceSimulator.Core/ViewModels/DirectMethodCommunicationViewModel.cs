@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
@@ -17,8 +18,9 @@ namespace DeviceSimulator.Core
 
         private readonly IDeviceService _deviceService;
         private readonly ITranslationsService _translationsService;
+        private readonly IDeviceSettingDataService _deviceSettingDataService;
 
-        private readonly ObservableCollection<DirectMethodSetting> _directMethods;
+        private ObservableCollection<DirectMethodSettingViewItem> _directMethodSettingViewItems;
 
         private MvxSubscriptionToken _directMethodStatusChangedMessageToken;
 
@@ -31,20 +33,27 @@ namespace DeviceSimulator.Core
 
         public DirectMethodCommunicationViewModel(IDeviceService deviceService,
                                                   ITranslationsService translationsService,
-                                                  IMvxMessenger messageService)
+                                                  IMvxMessenger messageService,
+                                                  IDeviceSettingDataService deviceSettingDataService)
         {
-            _directMethods = new ObservableCollection<DirectMethodSetting>();
             _deviceService = deviceService;
             _translationsService = translationsService;
+            _deviceSettingDataService = deviceSettingDataService;
 
             _directMethodStatusChangedMessageToken = messageService.Subscribe<DirectMethodStatusUpdatedMessage>(HandleDirectMethodStatusChanged);
+        }
+
+        public override Task Initialize()
+        {
+            CreateViewItems();
+            return base.Initialize();
         }
 
         #endregion
 
         #region Public
 
-        public ObservableCollection<DirectMethodSetting> DirectMethods => _directMethods;
+        public ObservableCollection<DirectMethodSettingViewItem> DirectMethods => _directMethodSettingViewItems;
 
         public string DirectMethodEntry
         {
@@ -95,8 +104,9 @@ namespace DeviceSimulator.Core
             {
                 if (!string.IsNullOrEmpty(DirectMethodEntry))
                 {
-                    var directMethod = new DirectMethodSetting(DirectMethodEntry)
+                    var directMethod = new DirectMethodSettingViewItem()
                     {
+                        DirectMethodSetting = new DirectMethodSetting(DirectMethodEntry),
                         CommandString = _translationsService.GetString("RegisterMethod")
                     };
                     var command = new MvxCommand(async () =>
@@ -105,17 +115,17 @@ namespace DeviceSimulator.Core
                         {
                             directMethod.CommandString = _translationsService.GetString("UnregisterMethod"); 
                             directMethod.IsEnabled = false;
-                            await _deviceService.RegisterDirectMethodAsync(directMethod);
+                            await _deviceService.RegisterDirectMethodAsync(directMethod.DirectMethodSetting);
                         }
                         else
                         {
                             directMethod.CommandString = _translationsService.GetString("RegisterMethod");
                             directMethod.IsEnabled = true;
-                            await _deviceService.UnregisterDirectMethodAsync(directMethod.DirectMethodName);
+                            await _deviceService.UnregisterDirectMethodAsync(directMethod.DirectMethodSetting.DirectMethodName);
                         }
                     });
                     directMethod.RegisterCommand = command;
-                    _directMethods.Add(directMethod);
+                    _directMethodSettingViewItems.Add(directMethod);
                     DirectMethodEntry = string.Empty;
                     RaisePropertyChanged(() => DirectMethods);
                 }
@@ -131,6 +141,24 @@ namespace DeviceSimulator.Core
             if (!string.IsNullOrEmpty(message.Status))
             {
                 Status += message.Status;
+            }
+        }
+
+        private void CreateViewItems()
+        {
+            _directMethodSettingViewItems = new ObservableCollection<DirectMethodSettingViewItem>();
+            var directMethodSettings = _deviceSettingDataService.DeviceSetting.DirectMethodSettings;
+            if (directMethodSettings != null)
+            {
+                foreach(var item in directMethodSettings)
+                {
+                    var viewItem = new DirectMethodSettingViewItem()
+                    {
+                        DirectMethodSetting = item,
+                        RegisterCommand = AddDirectMethodCommand
+                    };
+                    _directMethodSettingViewItems.Add(viewItem);
+                }
             }
         }
 

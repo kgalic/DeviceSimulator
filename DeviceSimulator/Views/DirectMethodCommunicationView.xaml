@@ -43,7 +43,7 @@
                     <DataTemplate>
                         <StackPanel HorizontalAlignment="Right"
                                     Orientation="Horizontal">
-                            <TextBlock Text="{Binding DirectMethodName, Mode=TwoWay}"
+                            <TextBlock Text="{Binding DirectMethodSetting.DirectMethodName, Mode=TwoWay}"
                                        Width="200"
                                        TextAlignment="Right"
                                        Margin="10,10,10,10"/>
@@ -53,7 +53,7 @@
                                             Width="100"
                                             Command="{Binding RegisterCommand}" />
                                 <local:NumericUpDownControl  ControlTitle="{Binding DataContext.DelayString, ElementName=DirectMethodPage}"
-                                                             NumericCounter="{Binding Delay, Mode=TwoWay}"
+                                                             NumericCounter="{Binding DirectMethodSetting.Delay, Mode=TwoWay}"
                                                              IsControlEnabled="{Binding IsEnabled, Mode=TwoWay}"/>
                             </StackPanel>
                         </StackPanel>

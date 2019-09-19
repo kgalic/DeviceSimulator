@@ -12,7 +12,7 @@ namespace DeviceSimulator.Core
             set;
         }
 
-        public DirectMethodSetting DirectMethodSetting
+        public IList<DirectMethodSetting> DirectMethodSettings
         {
             get;
             set;

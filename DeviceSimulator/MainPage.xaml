@@ -16,9 +16,15 @@
                         IsTabStop="False" 
                         IsBackEnabled="True" >
             <NavigationView.MenuItems>
-                <NavigationViewItem Tag="home" Icon="Home" Content="Home"/>
-                <NavigationViewItem Content="Direct Methods" Tag="direct_method" />
-                <NavigationViewItem Content="Cloud Messages" Tag="c2d_messages"/>
+                <NavigationViewItem Tag="home" 
+                                    Icon="Home" 
+                                    Content="Home"/>
+                <NavigationViewItem Content="Direct Methods" 
+                                    IsEnabled="{Binding IsIoTHubConnected}"
+                                    Tag="direct_method" />
+                <NavigationViewItem Content="Cloud Messages" 
+                                    IsEnabled="{Binding IsIoTHubConnected}"
+                                    Tag="c2d_messages"/>
             </NavigationView.MenuItems>
             <NavigationView.Content>
                 <Frame x:Name="ContentFrame">
@@ -27,7 +33,6 @@
                             <NavigationThemeTransition />
                         </TransitionCollection>
                     </Frame.ContentTransitions>
-                    
                 </Frame>
             </NavigationView.Content>
         </NavigationView>

@@ -7,12 +7,11 @@ using System.Text;
 
 namespace DeviceSimulator.Core
 {
-    public class DirectMethodSetting : MvxNotifyPropertyChanged
+    public class DirectMethodSetting
     {
         public DirectMethodSetting(string directMethodName)
         {
             DirectMethodName = directMethodName;
-            IsEnabled = true;
         }
 
         public string DirectMethodName
@@ -22,36 +21,6 @@ namespace DeviceSimulator.Core
         }
 
         public int Delay
-        {
-            get;
-            set;
-        }
-
-        private bool _isEnabled;
-        [JsonIgnore]
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set
-            {
-                _isEnabled = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        private string _commandString;
-        [JsonIgnore]
-        public string CommandString
-        {
-            get => _commandString;
-            set
-            {
-                _commandString = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public IMvxCommand RegisterCommand
         {
             get;
             set;

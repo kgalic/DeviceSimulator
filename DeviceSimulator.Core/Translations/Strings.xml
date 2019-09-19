@@ -11,6 +11,8 @@
   <string name="DeviceConnected">Device Connected</string>
   <string name="DeviceDisconnected">Device Disconnected</string>
   <string name="MessageSent">Message has been sent to IoT Hub{0}{1}{2}</string>
+  <string name="Save">Save</string>
+  <string name="Load">Load</string>
 
   <!-- Direct Method View -->
   <string name="DirectMethodName">Direct Method Name</string>

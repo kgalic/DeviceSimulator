@@ -20,44 +20,51 @@ namespace DeviceSimulator.Core.ViewModels
         private readonly ITimerService _timerService;
         private readonly IMvxMessenger _messageService;
         private readonly ITranslationsService _translationsService;
+        private readonly IDeviceSettingDataService _deviceSettingDataService;
 
         private MvxSubscriptionToken _deviceStatusChangedMessageToken;
-        private MvxSubscriptionToken _deviceConnectionStatusChangedMessageToken;
         private MvxSubscriptionToken _timerServiceTriggeredMessageToken;
+
+        private DeviceSetting _deviceSetting;
 
         private string _deviceStatus;
         private string _message;
-        private string _iotHubConnectionString;
         private string _deviceConnectionStatus;
         private string _timerStatusTitle;
 
         private int _delayInSeconds;
-
-        private bool _isDelayRangeVisible = true;
 
         #endregion
 
         #region Constructors & Lifecycle
 
         public HomeViewModel(IDeviceService deviceService,
-            ITimerService timerService,
-            IMvxMessenger messageService,
-            ITranslationsService translationsService)
+                             ITimerService timerService,
+                             IMvxMessenger messageService,
+                             ITranslationsService translationsService,
+                             IDeviceSettingDataService deviceSettingDataService)
         {
             _deviceService = deviceService;
             _timerService = timerService;
             _messageService = messageService;
             _translationsService = translationsService;
+            _deviceSettingDataService = deviceSettingDataService;
 
             TimerStatusTitle = _translationsService.GetString("StartTimer"); ;
             _delayInSeconds = SliderMinimum;
 
             DeviceStatus = string.Empty;
-            SetDeviceConnectionStatusForStatus(_deviceService.IsConnected);
+            SetDeviceConnectionStatusForStatus();
 
             _deviceStatusChangedMessageToken = messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
-            _deviceConnectionStatusChangedMessageToken = messageService.Subscribe<DeviceConnectionChangedMessage>(HandleDeviceConnectionStatus);
             _timerServiceTriggeredMessageToken = messageService.Subscribe<TimerServiceTriggeredMessage>(HandleTimerTrigger);
+        }
+
+        public override Task Initialize()
+        {
+            _deviceSetting = new DeviceSetting();
+            _deviceSettingDataService.DeviceSetting = _deviceSetting;
+            return base.Initialize();
         }
 
         #endregion
@@ -81,11 +88,11 @@ namespace DeviceSimulator.Core.ViewModels
         {
             get
             {
-                return _iotHubConnectionString;
+                return _deviceSetting.ConnectionString;
             }
             set
             {
-                _iotHubConnectionString = value;
+                _deviceSetting.ConnectionString = value;
                 RaisePropertyChanged(() => IoTHubConnectionString);
             }
         }
@@ -145,19 +152,6 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
-        public bool IsDelayRangeVisible
-        {
-            get
-            {
-                return _isDelayRangeVisible;
-            }
-            set
-            {
-                _isDelayRangeVisible = value;
-                RaisePropertyChanged(() => IsDelayRangeVisible);
-            }
-        }
-
         public int DelayInSeconds
         {
             get
@@ -191,6 +185,16 @@ namespace DeviceSimulator.Core.ViewModels
             get => _translationsService.GetString("SendMessage");
         }
 
+        public string SaveString
+        {
+            get => _translationsService.GetString("Save");
+        }
+
+        public string LoadString
+        {
+            get => _translationsService.GetString("Load");
+        }
+
         #endregion
 
         #region Commands
@@ -199,16 +203,17 @@ namespace DeviceSimulator.Core.ViewModels
         {
             get
             {
-                return new MvxCommand(() =>
+                return new MvxCommand(async () =>
                 {
                     if (_deviceService.IsConnected)
                     {
-                        _deviceService.DisconnectFromDevice();
+                        await _deviceService.DisconnectFromDevice().ConfigureAwait(false); ;
                     }
                     else
                     {
-                        _deviceService.ConnectToDevice(IoTHubConnectionString);
+                        await _deviceService.ConnectToDevice(IoTHubConnectionString).ConfigureAwait(false);
                     }
+                    SetDeviceConnectionStatusForStatus();
                 });
             }
         }
@@ -224,6 +229,26 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
+        public IMvxCommand SaveSettingsCommand
+        {
+            get
+            {
+                return new MvxCommand(() =>
+                {
+                });
+            }
+        }
+
+        public IMvxCommand LoadSettingsCommand
+        {
+            get
+            {
+                return new MvxCommand(() =>
+                {
+                });
+            }
+        }
+
         public IMvxCommand StartTimerServiceCommand
         {
             get
@@ -234,13 +259,11 @@ namespace DeviceSimulator.Core.ViewModels
                     {
                         _messageService.Publish(new StopTimerServiceMessage(this));
                         TimerStatusTitle = _translationsService.GetString("StartTimer");
-                        IsDelayRangeVisible = false;
                     }
                     else
                     {
                         _messageService.Publish(new StartTimerServiceMessage(this));
                         TimerStatusTitle = _translationsService.GetString("StopTimer");
-                        IsDelayRangeVisible = true;
                     }
                 });
             }
@@ -258,15 +281,10 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
-        private void HandleDeviceConnectionStatus(DeviceConnectionChangedMessage message)
+        private void SetDeviceConnectionStatusForStatus()
         {
-            SetDeviceConnectionStatusForStatus(message.IsConnected);
-        }
-
-        private void SetDeviceConnectionStatusForStatus(bool isConnected)
-        {
-            DeviceConnectionStatus = isConnected ? _translationsService.GetString("Disconnect") 
-                                                 : _translationsService.GetString("Connect");
+            DeviceConnectionStatus = _deviceService.IsConnected ? _translationsService.GetString("Disconnect") 
+                                                                : _translationsService.GetString("Connect");
         }
 
         private void HandleTimerTrigger(MvxMessage message)

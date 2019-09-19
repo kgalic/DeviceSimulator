@@ -29,11 +29,11 @@ namespace DeviceSimulator.Core
         private void RegisterServices()
         {
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
-            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IConstantsService, ConstantsService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITimerService, TimerService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IMessageExpressionService, MessageExpressionService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IConsoleLoggerService, ConsoleLoggerService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITranslationsService, TranslationsService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceSettingDataService, DeviceSettingDataService>();
         }
     }
 }

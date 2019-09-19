@@ -23,19 +23,34 @@ namespace DeviceSimulator.Core
             ("c2d_messages", typeof(CloudToDeviceCommunicationViewModel))
         };
 
+        private readonly IDeviceService _deviceService;
+
+        private MvxSubscriptionToken _deviceConnectionStatusChangedMessageToken;
+
         #endregion
 
         #region Constructors & Lifecycle
 
-        public MainViewModel()
+        public MainViewModel(IDeviceService deviceService,
+                             IMvxMessenger messageService)
         {
-            
+            _deviceService = deviceService;
+            _deviceConnectionStatusChangedMessageToken = messageService.Subscribe<DeviceConnectionChangedMessage>(HandleDeviceConnectionStatus);
         }
 
         public override void ViewAppeared()
         {
             base.ViewAppeared();
             Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<HomeViewModel>();
+        }
+
+        #endregion
+
+        #region Public
+
+        public bool IsIoTHubConnected
+        {
+            get => _deviceService.IsConnected;
         }
 
         #endregion
@@ -61,6 +76,15 @@ namespace DeviceSimulator.Core
                     Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<CloudToDeviceCommunicationViewModel>();
                 }
             });
+        }
+
+        #endregion
+
+        #region Private
+
+        private void HandleDeviceConnectionStatus(DeviceConnectionChangedMessage message)
+        {
+            RaisePropertyChanged(() => IsIoTHubConnected);
         }
 
         #endregion
