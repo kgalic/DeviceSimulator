@@ -11,6 +11,11 @@ namespace DeviceSimulator.Core
             get;
             set;
         }
+        public string Message
+        {
+            get;
+            set;
+        }
 
         public IList<DirectMethodSetting> DirectMethodSettings
         {

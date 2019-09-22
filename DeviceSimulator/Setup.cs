@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using MvvmCross.Platforms.Uap.Presenters;
 using MvvmCross.Platforms.Uap.Views;
+using DeviceSimulator.Core;
 
 namespace DeviceSimulator
 {
@@ -36,6 +37,7 @@ namespace DeviceSimulator
             base.InitializeLastChance();
 
             Mvx.IoCProvider.RegisterSingleton<IMvxMessenger>(new MvxMessengerHub());
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IFilePickerService, FilePickerService>();
         }
     }
 }

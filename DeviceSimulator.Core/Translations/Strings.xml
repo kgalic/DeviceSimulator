@@ -28,4 +28,9 @@
   <!-- Exception Messages -->
   <string name="SendingD2CMessageException">Exception occured while sending D2C Message!</string>
   <string name="IoTHubNotReachableMessageException">IoT hub cannot be reached{0}{1}</string>
+  <string name="ErrorLoadingFileMessageException">File format not correct. Please make sure the file is not corrupted.</string>
+
+  <!-- Save/Load Configuration -->
+  <string name="JsonConfig">JSON configuration</string>
+  <string name="DeviceConfigFileName">IoT Device Config</string>
 </resources>

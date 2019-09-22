@@ -103,6 +103,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="ViewPresenters\MvxWindowsViewPresenter.cs" />
     <Compile Include="Views\CloudToDeviceCommunicationView.xaml.cs">
@@ -169,6 +170,9 @@
     </PackageReference>
     <PackageReference Include="MvvmCross.Plugin.Messenger">
       <Version>6.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

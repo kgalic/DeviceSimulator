@@ -4,6 +4,7 @@ using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,8 @@ namespace DeviceSimulator.Core.ViewModels
         private readonly IMvxMessenger _messageService;
         private readonly ITranslationsService _translationsService;
         private readonly IDeviceSettingDataService _deviceSettingDataService;
+        private readonly IFilePickerService _filePickerService;
+        private readonly IConsoleLoggerService _consoleLoggerService;
 
         private MvxSubscriptionToken _deviceStatusChangedMessageToken;
         private MvxSubscriptionToken _timerServiceTriggeredMessageToken;
@@ -28,7 +31,6 @@ namespace DeviceSimulator.Core.ViewModels
         private DeviceSetting _deviceSetting;
 
         private string _deviceStatus;
-        private string _message;
         private string _deviceConnectionStatus;
         private string _timerStatusTitle;
 
@@ -40,31 +42,44 @@ namespace DeviceSimulator.Core.ViewModels
 
         public HomeViewModel(IDeviceService deviceService,
                              ITimerService timerService,
-                             IMvxMessenger messageService,
                              ITranslationsService translationsService,
-                             IDeviceSettingDataService deviceSettingDataService)
+                             IDeviceSettingDataService deviceSettingDataService,
+                             IFilePickerService filePickerService,
+                             IConsoleLoggerService consoleLoggerService,
+                             IMvxMessenger messageService)
         {
             _deviceService = deviceService;
             _timerService = timerService;
             _messageService = messageService;
             _translationsService = translationsService;
             _deviceSettingDataService = deviceSettingDataService;
+            _filePickerService = filePickerService;
+            _consoleLoggerService = consoleLoggerService;
 
             TimerStatusTitle = _translationsService.GetString("StartTimer"); ;
             _delayInSeconds = SliderMinimum;
 
             DeviceStatus = string.Empty;
+
+            if (_deviceSettingDataService.DeviceSetting != null)
+            {
+                _deviceSetting = _deviceSettingDataService.DeviceSetting;
+            }
+            else
+            {
+                _deviceSetting = new DeviceSetting();
+                _deviceSettingDataService.DeviceSetting = _deviceSetting;
+            }
             SetDeviceConnectionStatusForStatus();
 
             _deviceStatusChangedMessageToken = messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
             _timerServiceTriggeredMessageToken = messageService.Subscribe<TimerServiceTriggeredMessage>(HandleTimerTrigger);
         }
 
-        public override Task Initialize()
+        public override void ViewDisappearing()
         {
-            _deviceSetting = new DeviceSetting();
+            base.ViewDisappearing();
             _deviceSettingDataService.DeviceSetting = _deviceSetting;
-            return base.Initialize();
         }
 
         #endregion
@@ -114,11 +129,11 @@ namespace DeviceSimulator.Core.ViewModels
         {
             get
             {
-                return _message;
+                return _deviceSetting.Message;
             }
             set
             {
-                _message = value;
+                _deviceSetting.Message = value;
                 RaisePropertyChanged(() => MessagePayload);
             }
         }
@@ -233,8 +248,10 @@ namespace DeviceSimulator.Core.ViewModels
         {
             get
             {
-                return new MvxCommand(() =>
+                return new MvxCommand(async () =>
                 {
+                    _deviceSetting.Message = MessagePayload;
+                    await _filePickerService.SaveDeviceSettingFromDiskAsync(_deviceSetting);
                 });
             }
         }
@@ -243,8 +260,25 @@ namespace DeviceSimulator.Core.ViewModels
         {
             get
             {
-                return new MvxCommand(() =>
+                return new MvxCommand(async () =>
                 {
+                    try
+                    {
+                        var deviceSettings = await _filePickerService.LoadDeviceSettingFromDiskAsync();
+                        if (deviceSettings != null)
+                        {
+                            await ResetAll();
+                            _deviceSetting = deviceSettings;
+                            MessagePayload = _deviceSetting.Message;
+                            IoTHubConnectionString = _deviceSetting.ConnectionString;
+                            _deviceSettingDataService.DeviceSetting = _deviceSetting;
+                        }
+                    }
+                    catch
+                    {
+                        var exceptionMessage = _translationsService.GetString("ErrorLoadingFileMessageException");
+                        _consoleLoggerService.Log(exceptionMessage);
+                    }
                 });
             }
         }
@@ -257,13 +291,11 @@ namespace DeviceSimulator.Core.ViewModels
                 {
                     if (_timerService.IsRunning)
                     {
-                        _messageService.Publish(new StopTimerServiceMessage(this));
-                        TimerStatusTitle = _translationsService.GetString("StartTimer");
+                        StopTimer();
                     }
                     else
                     {
-                        _messageService.Publish(new StartTimerServiceMessage(this));
-                        TimerStatusTitle = _translationsService.GetString("StopTimer");
+                        StartTimer();
                     }
                 });
             }
@@ -305,6 +337,32 @@ namespace DeviceSimulator.Core.ViewModels
             {
                 Console.WriteLine(_translationsService.GetString("SendingD2CMessageException"));
             }
+        }
+
+        private void StartTimer()
+        {
+            _messageService.Publish(new StartTimerServiceMessage(this));
+            TimerStatusTitle = _translationsService.GetString("StopTimer");
+        }
+
+        private void StopTimer()
+        {
+            _messageService.Publish(new StopTimerServiceMessage(this));
+            TimerStatusTitle = _translationsService.GetString("StartTimer");
+        }
+
+        private async Task ResetAll()
+        {
+            StopTimer();
+
+            if (_deviceService.IsConnected)
+            {
+                await _deviceService.DisconnectFromDevice().ConfigureAwait(false); ;
+            }
+
+            SetDeviceConnectionStatusForStatus();
+
+            DeviceStatus = string.Empty;
         }
 
         #endregion

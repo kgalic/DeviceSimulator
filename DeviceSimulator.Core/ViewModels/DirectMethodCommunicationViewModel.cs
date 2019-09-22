@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,8 +34,8 @@ namespace DeviceSimulator.Core
 
         public DirectMethodCommunicationViewModel(IDeviceService deviceService,
                                                   ITranslationsService translationsService,
-                                                  IMvxMessenger messageService,
-                                                  IDeviceSettingDataService deviceSettingDataService)
+                                                  IDeviceSettingDataService deviceSettingDataService,
+                                                  IMvxMessenger messageService)
         {
             _deviceService = deviceService;
             _translationsService = translationsService;
@@ -47,6 +48,12 @@ namespace DeviceSimulator.Core
         {
             CreateViewItems();
             return base.Initialize();
+        }
+
+        public override void ViewDisappearing()
+        {
+            base.ViewDisappearing();
+            _deviceSettingDataService.DeviceSetting.DirectMethodSettings = _directMethodSettingViewItems.Select(item => item.DirectMethodSetting).ToList();
         }
 
         #endregion
@@ -154,8 +161,7 @@ namespace DeviceSimulator.Core
                 {
                     var viewItem = new DirectMethodSettingViewItem()
                     {
-                        DirectMethodSetting = item,
-                        RegisterCommand = AddDirectMethodCommand
+                        DirectMethodSetting = item
                     };
                     _directMethodSettingViewItems.Add(viewItem);
                 }
