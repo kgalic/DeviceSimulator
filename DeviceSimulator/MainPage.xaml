@@ -48,7 +48,7 @@
                 <Frame x:Name="ContentFrame">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
-                            <NavigationThemeTransition />
+                            <EntranceThemeTransition />
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>

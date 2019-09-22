@@ -1,11 +1,14 @@
 ﻿using Microsoft.Azure.Devices.Client;
 using MvvmCross.Plugin.Messenger;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
@@ -20,6 +23,9 @@ namespace DeviceSimulator.Core
         private DeviceClient _deviceClient;
         private bool _isConnected;
 
+        CancellationTokenSource _source = new CancellationTokenSource();
+        CancellationToken _cancellationToken;
+
         private IDictionary<string, MethodCallback> _directMethodDictionary;
 
         public DeviceService(IMvxMessenger messageService,
@@ -31,6 +37,8 @@ namespace DeviceSimulator.Core
             _messageService = messageService;
             _consoleLoggerService = consoleLoggerService;
             _translationsService = translationsService;
+
+            _cancellationToken = _source.Token;
         }
 
         public async Task ConnectToDevice(string connectionString)
@@ -38,8 +46,8 @@ namespace DeviceSimulator.Core
             try
             {
                 _deviceClient = DeviceClient.CreateFromConnectionString(connectionString);
-
                 await InitializeDevice();
+                ReceiveCloudMessages(_cancellationToken);
             }
             catch (Exception e)
             {
@@ -53,6 +61,7 @@ namespace DeviceSimulator.Core
 
         public async Task DisconnectFromDevice()
         {
+            _source.Cancel();
             await _deviceClient.CloseAsync();
             _isConnected = false;
 
@@ -142,6 +151,20 @@ namespace DeviceSimulator.Core
         private void SendDeviceConnectionUpdatedMessage()
         {
             _messageService.Publish(new DeviceConnectionChangedMessage(this, IsConnected));
+        }
+
+        private async Task ReceiveCloudMessages(CancellationToken cancellationToken)
+        {
+            while(!cancellationToken.IsCancellationRequested)
+            {
+                var cloudToDeviceMessage = await _deviceClient.ReceiveAsync(_cancellationToken);
+                if (cloudToDeviceMessage.BodyStream != null)
+                {
+                    var streamReader = new StreamReader(cloudToDeviceMessage.BodyStream);
+                    var message = await streamReader.ReadToEndAsync();
+                    _messageService.Publish(new CloudMessageReceivedMessage(this, message));
+                }
+            }
         }
     }
 }

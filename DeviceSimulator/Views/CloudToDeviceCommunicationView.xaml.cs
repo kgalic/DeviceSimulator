@@ -27,5 +27,14 @@ namespace DeviceSimulator.Views
         {
             this.InitializeComponent();
         }
+
+        private void MessagesTxtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var scrollableHeight = MessagesScrollView.ScrollableHeight;
+            if (scrollableHeight > 0)
+            {
+                MessagesScrollView.ChangeView(MessagesScrollView.HorizontalOffset, scrollableHeight, null);
+            }
+        }
     }
 }

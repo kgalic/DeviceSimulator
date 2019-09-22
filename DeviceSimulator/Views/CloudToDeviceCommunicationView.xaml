@@ -10,6 +10,15 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <ScrollViewer
+                x:Name="MessagesScrollView"
+                VerticalScrollBarVisibility="Auto">
+            <TextBox 
+                    x:Name="MessagesTxtBox"
+                    IsEnabled="False"
+                    TextWrapping="Wrap" 
+                    TextChanged="MessagesTxtBox_TextChanged"
+                    Text="{Binding MessageOutput, Mode=TwoWay}"  />
+        </ScrollViewer>
     </Grid>
 </views:MvxWindowsPage>
