@@ -14,17 +14,35 @@
                         ItemInvoked="NavView_ItemInvoked"
                         PaneDisplayMode="Top" 
                         IsTabStop="False" 
-                        IsBackEnabled="True" >
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False">
             <NavigationView.MenuItems>
                 <NavigationViewItem Tag="home" 
-                                    Icon="Home" 
-                                    Content="Home"/>
+                                    Content="Device">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                              Glyph="&#xED5C;"
+                                              FontSize="12"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem Content="Direct Methods" 
                                     IsEnabled="{Binding IsIoTHubConnected}"
-                                    Tag="direct_method" />
+                                    Tag="direct_method" >
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                              Glyph="&#xED10;"
+                                              FontSize="12"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem Content="Cloud Messages" 
                                     IsEnabled="{Binding IsIoTHubConnected}"
-                                    Tag="c2d_messages"/>
+                                    Tag="c2d_messages">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                              Glyph="&#xE753;"
+                                              FontSize="12"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.Content>
                 <Frame x:Name="ContentFrame">
