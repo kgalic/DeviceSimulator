@@ -60,7 +60,7 @@ namespace DeviceSimulator.Core
 
         #region Public
 
-        public ObservableCollection<DirectMethodSettingViewItem> DirectMethods => _directMethodSettingViewItems;
+        public ObservableCollection<DirectMethodSettingViewItem> ViewItems => _directMethodSettingViewItems;
 
         public string DirectMethodEntry
         {
@@ -111,30 +111,11 @@ namespace DeviceSimulator.Core
             {
                 if (!string.IsNullOrEmpty(DirectMethodEntry))
                 {
-                    var directMethod = new DirectMethodSettingViewItem()
-                    {
-                        DirectMethodSetting = new DirectMethodSetting(DirectMethodEntry),
-                        CommandString = _translationsService.GetString("RegisterMethod")
-                    };
-                    var command = new MvxCommand(async () =>
-                    {
-                        if (directMethod.IsEnabled)
-                        {
-                            directMethod.CommandString = _translationsService.GetString("UnregisterMethod"); 
-                            directMethod.IsEnabled = false;
-                            await _deviceService.RegisterDirectMethodAsync(directMethod.DirectMethodSetting);
-                        }
-                        else
-                        {
-                            directMethod.CommandString = _translationsService.GetString("RegisterMethod");
-                            directMethod.IsEnabled = true;
-                            await _deviceService.UnregisterDirectMethodAsync(directMethod.DirectMethodSetting.DirectMethodName);
-                        }
-                    });
-                    directMethod.RegisterCommand = command;
-                    _directMethodSettingViewItems.Add(directMethod);
+                    var directMethodSetting = new DirectMethodSetting(DirectMethodEntry);
+                    var directMethodViewItem = CreateDirectMethodViewItem(directMethodSetting);
+                    _directMethodSettingViewItems.Add(directMethodViewItem);
                     DirectMethodEntry = string.Empty;
-                    RaisePropertyChanged(() => DirectMethods);
+                    RaisePropertyChanged(() => ViewItems);
                 }
             });
         }
@@ -159,13 +140,42 @@ namespace DeviceSimulator.Core
             {
                 foreach(var item in directMethodSettings)
                 {
-                    var viewItem = new DirectMethodSettingViewItem()
-                    {
-                        DirectMethodSetting = item
-                    };
+                    var viewItem = CreateDirectMethodViewItem(item);
                     _directMethodSettingViewItems.Add(viewItem);
                 }
             }
+        }
+
+        private DirectMethodSettingViewItem CreateDirectMethodViewItem(DirectMethodSetting directMethodSetting)
+        {
+            var directMethodViewItem = new DirectMethodSettingViewItem()
+            {
+                DirectMethodSetting = directMethodSetting,
+                CommandString = _translationsService.GetString("RegisterMethod")
+            };
+            var registerCommand = new MvxCommand(async () =>
+            {
+                if (directMethodViewItem.IsEnabled)
+                {
+                    directMethodViewItem.CommandString = _translationsService.GetString("UnregisterMethod");
+                    directMethodViewItem.IsEnabled = false;
+                    await _deviceService.RegisterDirectMethodAsync(directMethodViewItem.DirectMethodSetting);
+                }
+                else
+                {
+                    directMethodViewItem.CommandString = _translationsService.GetString("RegisterMethod");
+                    directMethodViewItem.IsEnabled = true;
+                    await _deviceService.UnregisterDirectMethodAsync(directMethodViewItem.DirectMethodSetting.DirectMethodName);
+                }
+            });
+            var removeCommand = new MvxCommand<DirectMethodSettingViewItem>((item) =>
+            {
+                _directMethodSettingViewItems.Remove(item);
+            });
+            directMethodViewItem.RemoveCommand = removeCommand;
+            directMethodViewItem.RegisterCommand = registerCommand;
+
+            return directMethodViewItem;
         }
 
         #endregion

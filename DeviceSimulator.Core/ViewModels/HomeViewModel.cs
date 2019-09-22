@@ -35,6 +35,7 @@ namespace DeviceSimulator.Core.ViewModels
         private string _timerStatusTitle;
 
         private int _delayInSeconds;
+        private bool _isTimerOn;
 
         #endregion
 
@@ -176,7 +177,10 @@ namespace DeviceSimulator.Core.ViewModels
             set
             {
                 _delayInSeconds = value;
-                _messageService.Publish(new StartTimerServiceMessage(this, _delayInSeconds * 1000));
+                if (_isTimerOn)
+                {
+                    _messageService.Publish(new StartTimerServiceMessage(this, _delayInSeconds * 1000));
+                }
                 RaisePropertyChanged(() => DelayInSeconds);
             }
         }
@@ -341,12 +345,14 @@ namespace DeviceSimulator.Core.ViewModels
 
         private void StartTimer()
         {
+            _isTimerOn = true;
             _messageService.Publish(new StartTimerServiceMessage(this));
             TimerStatusTitle = _translationsService.GetString("StopTimer");
         }
 
         private void StopTimer()
         {
+            _isTimerOn = false;
             _messageService.Publish(new StopTimerServiceMessage(this));
             TimerStatusTitle = _translationsService.GetString("StartTimer");
         }

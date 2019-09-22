@@ -46,5 +46,11 @@ namespace DeviceSimulator.Core
             get;
             set;
         }
+
+        public IMvxCommand RemoveCommand
+        {
+            get;
+            set;
+        }
     }
 }
