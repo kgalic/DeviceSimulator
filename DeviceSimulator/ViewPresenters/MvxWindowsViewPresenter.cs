@@ -22,6 +22,7 @@ using DeviceSimulator.Views;
 using DeviceSimulator.Core.ViewModels;
 using System.Collections;
 using System.Collections.Generic;
+using Windows.UI.Xaml.Navigation;
 
 namespace DeviceSimulator
 {
@@ -31,6 +32,7 @@ namespace DeviceSimulator
         protected readonly IMvxWindowsFrame _rootFrame;
 
         protected readonly IDictionary<Type, MvxWindowsPage> _pages = new Dictionary<Type, MvxWindowsPage>();
+        protected readonly IList<PageStackEntry> _pageEntries = new List<PageStackEntry>();
 
         public MvxWindowsViewPresenter(IMvxWindowsFrame rootFrame)
         {
@@ -217,31 +219,19 @@ namespace DeviceSimulator
                 var requestText = GetRequestText(request);
                 var viewsContainer = Mvx.IoCProvider.Resolve<IMvxViewsContainer>();
                 
-                
                 if (_rootFrame.Content is MainPage currentPage)
                 {
-                    var backStack = currentPage.MainContentFrame.BackStack.ToList();
-                    var isInTheStack = false;
-
-                    while (backStack.FirstOrDefault(p => p.SourcePageType.Name == viewType.Name) != null)
-                    {
-                        isInTheStack = true;
-                        currentPage.MainContentFrame.GoBack();
-                    }
-                    if (!isInTheStack)
-                    {
-                        currentPage.MainContentFrame.Navigate(viewType, requestText); //Frame won't allow serialization of it's nav-state if it gets a non-simple type as a nav param
-                    }
+                    currentPage.MainContentFrame.Navigate(viewType, requestText);
                 }
                 else
                 {
-                    _rootFrame.Navigate(viewType, requestText); //Frame won't allow serialization of it's nav-state if it gets a non-simple type as a nav param
+                    _rootFrame.Navigate(viewType, requestText); 
                 }
 
                 HandleBackButtonVisibility();
                 return Task.FromResult(true);
             }
-            catch (Exception exception)
+            catch
             {
                 return Task.FromResult(false);
             }

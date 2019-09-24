@@ -1,4 +1,6 @@
-﻿using MvvmCross.Platforms.Uap.Views;
+﻿using MvvmCross;
+using MvvmCross.Platforms.Uap.Views;
+using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,11 +23,23 @@ namespace DeviceSimulator.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class DirectMethodCommunicationView : MvxWindowsPage
+    public sealed partial class DirectMethodCommunicationView : MvxWindowsPage, IPersistentView
     {
         public DirectMethodCommunicationView()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // if cache mode is 'Required' then View Model 
+            // should be retrieved instead of creating a new one
+            var cachedViewModel = ViewModel;
+            base.OnNavigatedTo(e);
+            if (cachedViewModel != null)
+            {
+                ViewModel = cachedViewModel;
+            }
         }
     }
 }
