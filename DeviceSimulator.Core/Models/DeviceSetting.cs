@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DeviceSimulator.Core
 {
-    public class DeviceSetting
+    public class DeviceSetting : BaseSetting
     {
         public string ConnectionString
         {

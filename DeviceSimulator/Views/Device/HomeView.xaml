@@ -27,12 +27,12 @@
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" 
                      PlaceholderText="{Binding IoTHubConnectionStringPlaceholder}" 
-                     Text="{Binding IoTHubConnectionString, Mode=TwoWay}"/>
+                     Text="{Binding ConnectionString, Mode=TwoWay}"/>
             <Button Grid.Column="1" 
                     Background="Black" 
                     Foreground="White" 
-                    Content="{Binding DeviceConnectionStatus, Mode=TwoWay}" 
-                    Command="{Binding ConnectToIoTHubCommand}" />
+                    Content="{Binding ConnectionStatus, Mode=TwoWay}" 
+                    Command="{Binding ConnectCommand}" />
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -59,7 +59,7 @@
                     IsEnabled="False"
                     TextWrapping="Wrap" 
                     TextChanged="DeviceStatusTxtBox_TextChanged"
-                    Text="{Binding DeviceStatus, Mode=TwoWay}"  />
+                    Text="{Binding OutputLog, Mode=TwoWay}"  />
             </ScrollViewer>
         </Grid>
         <Grid Grid.Row="2">

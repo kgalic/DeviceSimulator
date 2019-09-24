@@ -41,7 +41,7 @@ namespace DeviceSimulator.Core
             _cancellationToken = _source.Token;
         }
 
-        public async Task ConnectToDevice(string connectionString)
+        public async Task Connect(string connectionString)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace DeviceSimulator.Core
             SendDeviceConnectionUpdatedMessage();
         }
 
-        public async Task DisconnectFromDevice()
+        public async Task Disconnect()
         {
             _source.Cancel();
             await _deviceClient.CloseAsync();

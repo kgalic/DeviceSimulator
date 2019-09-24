@@ -106,14 +106,17 @@
     <Compile Include="Services\FilePickerService.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="ViewPresenters\MvxWindowsViewPresenter.cs" />
-    <Compile Include="Views\CloudToDeviceCommunicationView.xaml.cs">
+    <Compile Include="Views\Device\CloudToDeviceCommunicationView.xaml.cs">
       <DependentUpon>CloudToDeviceCommunicationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\DirectMethodCommunicationView.xaml.cs">
+    <Compile Include="Views\Device\DirectMethodCommunicationView.xaml.cs">
       <DependentUpon>DirectMethodCommunicationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HomeView.xaml.cs">
+    <Compile Include="Views\Device\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\EventGrid\EventGridView.xaml.cs">
+      <DependentUpon>EventGridView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -145,15 +148,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\CloudToDeviceCommunicationView.xaml">
+    <Page Include="Views\Device\CloudToDeviceCommunicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DirectMethodCommunicationView.xaml">
+    <Page Include="Views\Device\DirectMethodCommunicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\HomeView.xaml">
+    <Page Include="Views\Device\HomeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EventGrid\EventGridView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

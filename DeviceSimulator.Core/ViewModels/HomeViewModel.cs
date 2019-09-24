@@ -1,66 +1,30 @@
-﻿using MvvmCross.Commands;
+﻿using MvvmCross;
+using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
-using MvvmCross.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core.ViewModels
 {
-    public class HomeViewModel : MvxViewModel
+    public class HomeViewModel : BasePublisherViewModel
     {
         #region Fields
 
-        public const int SliderMinimum = 1;
-        public const int SliderMaximum = 10;
-
-        private readonly IDeviceService _deviceService;
-        private readonly ITimerService _timerService;
-        private readonly IMvxMessenger _messageService;
-        private readonly ITranslationsService _translationsService;
-        private readonly IDeviceSettingDataService _deviceSettingDataService;
-        private readonly IFilePickerService _filePickerService;
-        private readonly IConsoleLoggerService _consoleLoggerService;
+        protected readonly IDeviceSettingDataService _deviceSettingDataService;
 
         private MvxSubscriptionToken _deviceStatusChangedMessageToken;
-        private MvxSubscriptionToken _timerServiceTriggeredMessageToken;
 
         private DeviceSetting _deviceSetting;
-
-        private string _deviceStatus;
-        private string _deviceConnectionStatus;
-        private string _timerStatusTitle;
-
-        private int _delayInSeconds;
-        private bool _isTimerOn;
 
         #endregion
 
         #region Constructors & Lifecycle
-
-        public HomeViewModel(IDeviceService deviceService,
-                             ITimerService timerService,
-                             ITranslationsService translationsService,
-                             IDeviceSettingDataService deviceSettingDataService,
-                             IFilePickerService filePickerService,
-                             IConsoleLoggerService consoleLoggerService,
-                             IMvxMessenger messageService)
+         
+        public HomeViewModel(IDeviceService deviceService) 
         {
-            _deviceService = deviceService;
-            _timerService = timerService;
-            _messageService = messageService;
-            _translationsService = translationsService;
-            _deviceSettingDataService = deviceSettingDataService;
-            _filePickerService = filePickerService;
-            _consoleLoggerService = consoleLoggerService;
-
-            TimerStatusTitle = _translationsService.GetString("StartTimer"); ;
-            _delayInSeconds = SliderMinimum;
-
-            DeviceStatus = string.Empty;
+            _publisherService = deviceService;
+            _deviceSettingDataService = Mvx.IoCProvider.Resolve<IDeviceSettingDataService>();
 
             if (_deviceSettingDataService.DeviceSetting != null)
             {
@@ -73,8 +37,7 @@ namespace DeviceSimulator.Core.ViewModels
             }
             SetDeviceConnectionStatusForStatus();
 
-            _deviceStatusChangedMessageToken = messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
-            _timerServiceTriggeredMessageToken = messageService.Subscribe<TimerServiceTriggeredMessage>(HandleTimerTrigger);
+            _deviceStatusChangedMessageToken = _messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
         }
 
         public override void ViewDisappearing()
@@ -87,20 +50,7 @@ namespace DeviceSimulator.Core.ViewModels
 
         #region Public
 
-        public string DeviceStatus
-        {
-            get
-            {
-                return _deviceStatus;
-            }
-            private set
-            {
-                _deviceStatus = value;
-                RaisePropertyChanged(() => DeviceStatus);
-            }
-        }
-
-        public string IoTHubConnectionString
+        public override string ConnectionString
         {
             get
             {
@@ -109,24 +59,11 @@ namespace DeviceSimulator.Core.ViewModels
             set
             {
                 _deviceSetting.ConnectionString = value;
-                RaisePropertyChanged(() => IoTHubConnectionString);
+                RaisePropertyChanged(() => ConnectionString);
             }
         }
 
-        public string DeviceConnectionStatus
-        {
-            get
-            {
-                return _deviceConnectionStatus;
-            }
-            set
-            {
-                _deviceConnectionStatus = value;
-                RaisePropertyChanged(() => DeviceConnectionStatus);
-            }
-        }
-
-        public string MessagePayload
+        public override string MessagePayload
         {
             get
             {
@@ -139,52 +76,6 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
-        public string TimerStatusTitle
-        {
-            get
-            {
-                return _timerStatusTitle;
-            }
-            set
-            {
-                _timerStatusTitle = value;
-                RaisePropertyChanged(() => TimerStatusTitle);
-            }
-        }
-
-        public int TimerDelayMinimumValue
-        {
-            get
-            {
-                return SliderMinimum;
-            }
-        }
-
-        public int TimerDelayMaximumValue
-        {
-            get
-            {
-                return SliderMaximum;
-            }
-        }
-
-        public int DelayInSeconds
-        {
-            get
-            {
-                return _delayInSeconds;
-            }
-            set
-            {
-                _delayInSeconds = value;
-                if (_isTimerOn)
-                {
-                    _messageService.Publish(new StartTimerServiceMessage(this, _delayInSeconds * 1000));
-                }
-                RaisePropertyChanged(() => DelayInSeconds);
-            }
-        }
-
         #endregion
 
         #region Translations
@@ -194,61 +85,30 @@ namespace DeviceSimulator.Core.ViewModels
             get => _translationsService.GetString("IoTHubConnectionString");
         }
 
-        public string MessagePayloadPlaceholder
-        {
-            get => _translationsService.GetString("MessagePayload");
-        }
-
-        public string SendMessageString
-        {
-            get => _translationsService.GetString("SendMessage");
-        }
-
-        public string SaveString
-        {
-            get => _translationsService.GetString("Save");
-        }
-
-        public string LoadString
-        {
-            get => _translationsService.GetString("Load");
-        }
-
         #endregion
 
         #region Commands
 
-        public IMvxCommand ConnectToIoTHubCommand
+        public IMvxCommand ConnectCommand
         {
             get
             {
                 return new MvxCommand(async () =>
                 {
-                    if (_deviceService.IsConnected)
+                    if (DeviceService.IsConnected)
                     {
-                        await _deviceService.DisconnectFromDevice().ConfigureAwait(false); ;
+                        await DeviceService.Disconnect().ConfigureAwait(false); ;
                     }
                     else
                     {
-                        await _deviceService.ConnectToDevice(IoTHubConnectionString).ConfigureAwait(false);
+                        await DeviceService.Connect(ConnectionString).ConfigureAwait(false);
                     }
                     SetDeviceConnectionStatusForStatus();
                 });
             }
         }
 
-        public IMvxCommand SendMessageCommand
-        {
-            get
-            {
-                return new MvxCommand(async () =>
-                {
-                    await SendMessagePayload();
-                });
-            }
-        }
-
-        public IMvxCommand SaveSettingsCommand
+        public override IMvxCommand SaveSettingsCommand
         {
             get
             {
@@ -260,7 +120,7 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
-        public IMvxCommand LoadSettingsCommand
+        public override IMvxCommand LoadSettingsCommand
         {
             get
             {
@@ -274,7 +134,7 @@ namespace DeviceSimulator.Core.ViewModels
                             await ResetAll();
                             _deviceSetting = deviceSettings;
                             MessagePayload = _deviceSetting.Message;
-                            IoTHubConnectionString = _deviceSetting.ConnectionString;
+                            ConnectionString = _deviceSetting.ConnectionString;
                             _deviceSettingDataService.DeviceSetting = _deviceSetting;
                         }
                     }
@@ -287,23 +147,11 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
-        public IMvxCommand StartTimerServiceCommand
-        {
-            get
-            {
-                return new MvxCommand(() =>
-                {
-                    if (_timerService.IsRunning)
-                    {
-                        StopTimer();
-                    }
-                    else
-                    {
-                        StartTimer();
-                    }
-                });
-            }
-        }
+        #endregion
+
+        #region Private
+
+        private IDeviceService DeviceService => _publisherService as IDeviceService;
 
         #endregion
 
@@ -313,13 +161,13 @@ namespace DeviceSimulator.Core.ViewModels
         {
             if (!string.IsNullOrEmpty(message.Status))
             {
-                DeviceStatus += $"{message.Status}\n";
+                OutputLog += $"{message.Status}\n";
             }
         }
 
         private void SetDeviceConnectionStatusForStatus()
         {
-            DeviceConnectionStatus = _deviceService.IsConnected ? _translationsService.GetString("Disconnect") 
+            ConnectionStatus = DeviceService.IsConnected ? _translationsService.GetString("Disconnect") 
                                                                 : _translationsService.GetString("Connect");
         }
 
@@ -334,7 +182,7 @@ namespace DeviceSimulator.Core.ViewModels
             {
                 if (MessagePayload != null && MessagePayload.Trim().Count() > 0)
                 {
-                    await _deviceService.SendRequest(MessagePayload);
+                    await DeviceService.SendRequest(MessagePayload);
                 }
             }
             catch
@@ -361,14 +209,14 @@ namespace DeviceSimulator.Core.ViewModels
         {
             StopTimer();
 
-            if (_deviceService.IsConnected)
+            if (DeviceService.IsConnected)
             {
-                await _deviceService.DisconnectFromDevice().ConfigureAwait(false); ;
+                await DeviceService.Disconnect().ConfigureAwait(false); ;
             }
 
             SetDeviceConnectionStatusForStatus();
 
-            DeviceStatus = string.Empty;
+            OutputLog = string.Empty;
         }
 
         #endregion
