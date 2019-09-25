@@ -48,7 +48,7 @@
                                     Tag="event_grid">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="Segoe MDL2 Assets" 
-                                              Glyph="&#xE753;"
+                                              Glyph="&#xF0E2;"
                                               FontSize="12"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
