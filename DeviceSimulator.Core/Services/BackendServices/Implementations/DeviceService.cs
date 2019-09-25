@@ -15,6 +15,8 @@ namespace DeviceSimulator.Core
 {
     public class DeviceService : IDeviceService
     {
+        #region Fields
+
         private readonly IMvxMessenger _messageService;
         private readonly IMessageExpressionService _messageExpressionService;
         private readonly IConsoleLoggerService _consoleLoggerService;
@@ -28,6 +30,10 @@ namespace DeviceSimulator.Core
 
         private IDictionary<string, MethodCallback> _directMethodDictionary;
 
+        #endregion
+
+        #region Constructors
+
         public DeviceService(IMvxMessenger messageService,
                              IMessageExpressionService messageExpressionService,
                              IConsoleLoggerService consoleLoggerService,
@@ -40,6 +46,10 @@ namespace DeviceSimulator.Core
 
             _cancellationToken = _source.Token;
         }
+
+        #endregion
+
+        #region IDeviceService
 
         public async Task Connect(string connectionString)
         {
@@ -141,6 +151,10 @@ namespace DeviceSimulator.Core
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
         private async Task InitializeDevice()
         {
             await _deviceClient.OpenAsync();
@@ -166,5 +180,7 @@ namespace DeviceSimulator.Core
                 }
             }
         }
+
+        #endregion
     }
 }

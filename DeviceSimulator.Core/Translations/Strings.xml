@@ -25,8 +25,20 @@
   <string name="RegisterMethod">Register</string>
   <string name="UnregisterMethod">Unregister</string>
 
+  <!-- Event Grid View -->
+  <string name="EndpointPlaceholder">Domain or Topic Endpoint</string>
+  <string name="KeyPlaceholder">Key</string>
+  <string name="TopicNamePlaceholder">Topic Name</string>
+  <string name="SubjectPlaceholder">Subject</string>
+  <string name="DataVersionPlaceholder">Data version</string>
+  <string name="EventTypePlaceholder">Event type</string>
+  <string name="EventSent">Event has been sent: {0}{1}{2}</string>
+  <string name="EventGridDisconnected">Disconnected</string>
+  <string name="EventGridConnected">Connected</string>
+
   <!-- Exception Messages -->
-  <string name="SendingD2CMessageException">Exception occured while sending D2C Message!</string>
+  <string name="SendingMessageException">Exception occured while sending Message!</string>
+  <string name="ParametersNotValid">Provided parameters are not valid!</string>
   <string name="IoTHubNotReachableMessageException">IoT hub cannot be reached{0}{1}</string>
   <string name="ErrorLoadingFileMessageException">File format not correct. Please make sure the file is not corrupted.</string>
 

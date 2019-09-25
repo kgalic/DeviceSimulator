@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace DeviceSimulator.Core
 {   public interface IDeviceService : IPublisherService
     {
+        Task Connect(string connectionString);
+
         Task RegisterDirectMethodAsync(DirectMethodSetting directMethod);
 
         Task UnregisterDirectMethodAsync(string methodName);

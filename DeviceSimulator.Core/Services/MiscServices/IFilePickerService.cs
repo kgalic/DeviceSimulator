@@ -7,7 +7,7 @@ namespace DeviceSimulator.Core
 {
     public interface IFilePickerService
     {
-        Task<BaseSetting> LoadDeviceSettingFromDiskAsync();
+        Task<string> LoadSettingsFromDiskAsync();
 
         Task SaveDeviceSettingFromDiskAsync(BaseSetting deviceSetting);
     }

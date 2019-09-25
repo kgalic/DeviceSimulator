@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.Azure.EventGrid;
+using Microsoft.Azure.EventGrid.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -7,21 +11,113 @@ namespace DeviceSimulator.Core
 {
     public class EventGridService : IEventGridService
     {
-        public bool IsConnected => throw new NotImplementedException();
+        #region Fields
 
-        public Task Connect(string connectionString)
+        private readonly ITranslationsService _translationsService;
+        private readonly IConsoleLoggerService _consoleLoggerService;
+
+        private EventGridClient _eventGridClient;
+
+        private string _endpoint;
+        private string _key;
+        private string _topic;
+        private string _subject;
+        private string _eventType;
+        private string _dataVersion;
+
+        private bool _isConnected;
+
+        #endregion
+
+        #region Constructors
+
+        public EventGridService(ITranslationsService translationsService,
+                                IConsoleLoggerService consoleLoggerService)
         {
-            throw new NotImplementedException();
+            _consoleLoggerService = consoleLoggerService;
+            _translationsService = translationsService;
+        }
+
+        #endregion
+
+        #region IEventGridService
+
+        public bool IsConnected => _isConnected;
+
+        public Task Connect(string endpoint,
+                            string key,
+                            string topic,
+                            string subject,
+                            string eventType,
+                            string dataVersion)
+        {
+            if (string.IsNullOrEmpty(endpoint)
+             || string.IsNullOrEmpty(key)
+             || string.IsNullOrEmpty(topic)
+             || string.IsNullOrEmpty(subject)
+             || string.IsNullOrEmpty(eventType)
+             || string.IsNullOrEmpty(dataVersion))
+            {
+                _consoleLoggerService.LogEventGrid(_translationsService.GetString("ParametersNotValid"));
+                return Task.FromResult(true);
+            }
+
+            _endpoint = endpoint;
+            _key = key;
+            _topic = topic;
+            _subject = subject;
+            _eventType = eventType;
+            _dataVersion = dataVersion;
+
+            TopicCredentials topicCredentials = new TopicCredentials(_key);
+            _eventGridClient = new EventGridClient(topicCredentials);
+            _isConnected = true;
+
+            _consoleLoggerService.LogEventGrid(_translationsService.GetString("EventGridConnected"));
+
+            return Task.FromResult(true);
         }
 
         public Task Disconnect()
         {
-            throw new NotImplementedException();
+            _isConnected = false;
+            _endpoint = null;
+            _key = null;
+            _topic = null;
+            _subject = null;
+            _eventType = null;
+            _dataVersion = null;
+
+            _eventGridClient.Dispose();
+            _eventGridClient = null;
+
+            _consoleLoggerService.LogEventGrid(_translationsService.GetString("EventGridDisconnected"));
+            return Task.FromResult(true);
         }
 
-        public Task SendRequest(string Request)
+        public async Task SendRequest(string request)
         {
-            throw new NotImplementedException();
+            dynamic obj = JsonConvert.DeserializeObject(request);
+            var eventGridEvent = new EventGridEvent()
+            {
+                Id = Guid.NewGuid().ToString(),
+                EventType = _eventType,
+                Topic = _topic,
+                Data = obj,
+                EventTime = DateTime.Now,
+                Subject = _subject,
+                DataVersion = _dataVersion
+            };
+            var domainHostname = new Uri(_endpoint).Host;
+
+            await _eventGridClient.PublishEventsAsync(domainHostname, new List<EventGridEvent>() { eventGridEvent });
+
+            _consoleLoggerService.LogEventGrid(string.Format(_translationsService.GetString("EventSent"),
+                                                             Environment.NewLine,
+                                                             request,
+                                                             Environment.NewLine));
         }
+
+        #endregion
     }
 }

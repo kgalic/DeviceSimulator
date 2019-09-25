@@ -9,5 +9,7 @@ namespace DeviceSimulator.Core
         void Log(string value);
 
         void LogDirectMethod(string value);
+
+        void LogEventGrid(string value);
     }
 }

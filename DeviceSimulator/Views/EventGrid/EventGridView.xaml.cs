@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MvvmCross.Platforms.Uap.Views;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,11 +21,32 @@ namespace DeviceSimulator.Views.EventGrid
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class EventGridView : Page
+    public sealed partial class EventGridView : MvxWindowsPage
     {
         public EventGridView()
         {
             this.InitializeComponent();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // if cache mode is 'Required' then View Model 
+            // should be retrieved instead of creating a new one
+            var cachedViewModel = ViewModel;
+            base.OnNavigatedTo(e);
+            if (cachedViewModel != null)
+            {
+                ViewModel = cachedViewModel;
+            }
+        }
+
+        private void OutputLogTxtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var scrollableHeight = StatusScrollView.ScrollableHeight;
+            if (scrollableHeight > 0)
+            {
+                StatusScrollView.ChangeView(StatusScrollView.HorizontalOffset, scrollableHeight, null);
+            }
         }
     }
 }

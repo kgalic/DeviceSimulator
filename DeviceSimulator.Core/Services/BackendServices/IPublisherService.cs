@@ -7,11 +7,9 @@ namespace DeviceSimulator.Core
 {
     public interface IPublisherService
     {
-        Task Connect(string connectionString);
-
         Task Disconnect();
 
-        Task SendRequest(string Request);
+        Task SendRequest(string request);
 
         bool IsConnected { get; }
     }

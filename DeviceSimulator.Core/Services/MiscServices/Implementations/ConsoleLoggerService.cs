@@ -34,7 +34,10 @@ namespace DeviceSimulator.Core
         {
             _messageService.Publish(new DirectMethodStatusUpdatedMessage(this, value));
         }
-
+        public void LogEventGrid(string value)
+        {
+            _messageService.Publish(new EventGridStatusUpdatedMessage(this, value));
+        }
         #endregion
     }
 }

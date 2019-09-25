@@ -1,14 +1,143 @@
-﻿<Page
+﻿<views:MvxWindowsPage   
     x:Class="DeviceSimulator.Views.EventGrid.EventGridView"
+    xmlns:views="using:MvvmCross.Platforms.Uap.Views" 
+    xmlns:local="using:DeviceSimulator.Converters"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DeviceSimulator.Views.EventGrid"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    NavigationCacheMode="Required"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-
+        <Grid.Resources>
+            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" 
+                     PlaceholderText="{Binding EndpointPlaceholder}" 
+                     Text="{Binding Endpoint, Mode=TwoWay}"/>
+            <TextBox Grid.Column="1" 
+                     PlaceholderText="{Binding KeyPlaceholder}" 
+                     Text="{Binding Key, Mode=TwoWay}"/>
+            <TextBox Grid.Column="2" 
+                     PlaceholderText="{Binding TopicNamePlaceholder}" 
+                     Text="{Binding TopicName, Mode=TwoWay}"/>
+            <TextBox Grid.Column="3" 
+                     PlaceholderText="{Binding SubjectPlaceholder}" 
+                     Text="{Binding Subject, Mode=TwoWay}"/>
+            <TextBox Grid.Column="4" 
+                     PlaceholderText="{Binding DataVersionPlaceholder}" 
+                     Text="{Binding DataVersion, Mode=TwoWay}"/>
+            <TextBox Grid.Column="5" 
+                     PlaceholderText="{Binding EventTypePlaceholder}" 
+                     Text="{Binding EventType, Mode=TwoWay}"/>
+            <Button Grid.Column="6" 
+                    Background="Black" 
+                    Foreground="White" 
+                    Content="{Binding ConnectionStatus, Mode=TwoWay}" 
+                    Command="{Binding ConnectCommand}" />
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ScrollViewer
+                x:Name="MessagePayloadScrollViewer"
+                Grid.Column="0" 
+                VerticalScrollBarVisibility="Auto">
+                <TextBox 
+                     x:Name="MessagePayloadTextBox"
+                     PlaceholderText="{Binding MessagePayloadPlaceholder}" 
+                     TextWrapping="Wrap" 
+                     AcceptsReturn="True"
+                     Text="{Binding MessagePayload, Mode=TwoWay}"/>
+            </ScrollViewer>
+            <ScrollViewer
+                x:Name="StatusScrollView"
+                Grid.Column="1" 
+                VerticalScrollBarVisibility="Auto">
+                <TextBox 
+                    x:Name="OutputLogTxtBox"
+                    IsEnabled="False"
+                    TextWrapping="Wrap" 
+                    TextChanged="OutputLogTxtBox_TextChanged"
+                    Text="{Binding OutputLog, Mode=TwoWay}"  />
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" 
+                        Background="Black" 
+                        Foreground="White" 
+                        Content="{Binding SendMessageString}" 
+                        Command="{Binding SendMessageCommand}" />
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Background="Black" 
+                                Foreground="White" 
+                                Grid.Column="0"
+                                Content="{Binding SaveString, Mode=TwoWay}" 
+                                Command="{Binding SaveSettingsCommand}" />
+                        <Button Background="Black" 
+                                Foreground="White" 
+                                Grid.Column="1"
+                                Content="{Binding LoadString, Mode=TwoWay}" 
+                                Command="{Binding LoadSettingsCommand}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Background="Black" 
+                        Foreground="White" 
+                        Grid.Column="0"
+                        Content="{Binding TimerStatusTitle, Mode=TwoWay}" 
+                        Command="{Binding StartTimerServiceCommand}" />
+                <Slider Margin="0,0,10,0"
+                        Grid.Column="1"
+                        Visibility="{Binding IsDelayRangeVisible, Mode=OneWay, 
+                            Converter={StaticResource BoolToVisibilityConverter}}"
+                        Minimum="{Binding TimerDelayMinimumValue, Mode=OneTime}" 
+                        Maximum="{Binding TimerDelayMaximumValue, Mode=OneTime}" 
+                        Value="{Binding DelayInSeconds, Mode=TwoWay}"/>
+            </Grid>
+        </Grid>
     </Grid>
-</Page>
+</views:MvxWindowsPage>

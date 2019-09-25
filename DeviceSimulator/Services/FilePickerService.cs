@@ -22,7 +22,7 @@ namespace DeviceSimulator
             _translationsService = translationsService;
         }
 
-        public async Task<BaseSetting> LoadDeviceSettingFromDiskAsync()
+        public async Task<string> LoadSettingsFromDiskAsync()
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
@@ -40,7 +40,7 @@ namespace DeviceSimulator
                 reader.ReadBytes(bytes);
 
                 string jsonStr = Encoding.UTF8.GetString(bytes);
-                return JsonConvert.DeserializeObject<DeviceSetting>(jsonStr);
+                return jsonStr;
             }
             else
             {

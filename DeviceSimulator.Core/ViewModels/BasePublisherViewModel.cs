@@ -44,9 +44,9 @@ namespace DeviceSimulator.Core
         {
             _timerService = Mvx.IoCProvider.Resolve<ITimerService>();
             _translationsService = Mvx.IoCProvider.Resolve<ITranslationsService>();
-            _filePickerService = Mvx.IoCProvider.Resolve<IFilePickerService>();
             _consoleLoggerService = Mvx.IoCProvider.Resolve<IConsoleLoggerService>();
             _messageService = Mvx.IoCProvider.Resolve<IMvxMessenger>();
+            _filePickerService = Mvx.IoCProvider.Resolve<IFilePickerService>();
            
             TimerStatusTitle = _translationsService.GetString("StartTimer"); ;
             _delayInSeconds = SliderMinimum;
@@ -71,11 +71,6 @@ namespace DeviceSimulator.Core
                 _outputLog = value;
                 RaisePropertyChanged(() => OutputLog);
             }
-        }
-
-        public abstract string ConnectionString
-        {
-            get; set;
         }
 
         public string ConnectionStatus
@@ -172,23 +167,9 @@ namespace DeviceSimulator.Core
 
         #region Commands
 
-        public IMvxCommand ConnectToIoTHubCommand
+        public abstract IMvxCommand ConnectCommand
         {
-            get
-            {
-                return new MvxCommand(async () =>
-                {
-                    if (_publisherService.IsConnected)
-                    {
-                        await _publisherService.Disconnect().ConfigureAwait(false); ;
-                    }
-                    else
-                    {
-                        await _publisherService.Connect(ConnectionString).ConfigureAwait(false);
-                    }
-                    SetConnectionStatus();
-                });
-            }
+            get;
         }
 
         public IMvxCommand SendMessageCommand
@@ -256,7 +237,7 @@ namespace DeviceSimulator.Core
             }
             catch
             {
-                Console.WriteLine(_translationsService.GetString("SendingD2CMessageException"));
+                _consoleLoggerService.Log(_translationsService.GetString("SendingMessageException"));
             }
         }
 

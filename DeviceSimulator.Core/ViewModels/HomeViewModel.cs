@@ -1,6 +1,7 @@
 ﻿using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace DeviceSimulator.Core.ViewModels
 
         #region Public
 
-        public override string ConnectionString
+        public string ConnectionString
         {
             get
             {
@@ -89,7 +90,7 @@ namespace DeviceSimulator.Core.ViewModels
 
         #region Commands
 
-        public IMvxCommand ConnectCommand
+        public override IMvxCommand ConnectCommand
         {
             get
             {
@@ -128,7 +129,8 @@ namespace DeviceSimulator.Core.ViewModels
                 {
                     try
                     {
-                        var deviceSettings =(DeviceSetting) await _filePickerService.LoadDeviceSettingFromDiskAsync();
+                        var deviceSettingsString = await _filePickerService.LoadSettingsFromDiskAsync();
+                        var deviceSettings = JsonConvert.DeserializeObject<DeviceSetting>(deviceSettingsString);
                         if (deviceSettings != null)
                         {
                             await ResetAll();
@@ -169,26 +171,6 @@ namespace DeviceSimulator.Core.ViewModels
         {
             ConnectionStatus = DeviceService.IsConnected ? _translationsService.GetString("Disconnect") 
                                                                 : _translationsService.GetString("Connect");
-        }
-
-        private void HandleTimerTrigger(MvxMessage message)
-        {
-            SendMessagePayload();
-        }
-
-        private async Task SendMessagePayload()
-        {
-            try
-            {
-                if (MessagePayload != null && MessagePayload.Trim().Count() > 0)
-                {
-                    await DeviceService.SendRequest(MessagePayload);
-                }
-            }
-            catch
-            {
-                Console.WriteLine(_translationsService.GetString("SendingD2CMessageException"));
-            }
         }
 
         private void StartTimer()
