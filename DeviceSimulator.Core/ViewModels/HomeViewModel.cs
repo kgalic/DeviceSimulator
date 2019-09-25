@@ -128,7 +128,7 @@ namespace DeviceSimulator.Core.ViewModels
                 {
                     try
                     {
-                        var deviceSettings = await _filePickerService.LoadDeviceSettingFromDiskAsync();
+                        var deviceSettings =(DeviceSetting) await _filePickerService.LoadDeviceSettingFromDiskAsync();
                         if (deviceSettings != null)
                         {
                             await ResetAll();

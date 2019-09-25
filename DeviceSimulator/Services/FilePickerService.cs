@@ -22,7 +22,7 @@ namespace DeviceSimulator
             _translationsService = translationsService;
         }
 
-        public async Task<DeviceSetting> LoadDeviceSettingFromDiskAsync()
+        public async Task<BaseSetting> LoadDeviceSettingFromDiskAsync()
         {
             var picker = new Windows.Storage.Pickers.FileOpenPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
@@ -48,7 +48,7 @@ namespace DeviceSimulator
             }
         }
 
-        public async Task SaveDeviceSettingFromDiskAsync(DeviceSetting deviceSetting)
+        public async Task SaveDeviceSettingFromDiskAsync(BaseSetting deviceSetting)
         {
             var savePicker = new Windows.Storage.Pickers.FileSavePicker();
             savePicker.SuggestedStartLocation =
