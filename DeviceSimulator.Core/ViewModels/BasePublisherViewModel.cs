@@ -139,6 +139,12 @@ namespace DeviceSimulator.Core
 
         public int DelayInMiliseconds => DelayInSeconds * 1000;
 
+        public Types ViewModelType
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         #region Translations
@@ -237,7 +243,8 @@ namespace DeviceSimulator.Core
             }
             catch
             {
-                _consoleLoggerService.Log(_translationsService.GetString("SendingMessageException"));
+                _consoleLoggerService.Log(value: _translationsService.GetString("SendingMessageException"),
+                                          logType: ViewModelType);
             }
         }
 

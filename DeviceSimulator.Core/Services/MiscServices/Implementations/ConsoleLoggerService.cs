@@ -25,19 +25,28 @@ namespace DeviceSimulator.Core
 
         #region IConsoleLoggerService
 
-        public void Log(string value)
+        public void Log(string value, Types logType)
         {
-            _messageService.Publish(new DeviceStatusUpdatedMessage(this, value));
+            switch (logType)
+            {
+                case Types.D2CCommunication:
+                    _messageService.Publish(new DeviceStatusUpdatedMessage(this, value));
+                    break;
+                case Types.DirectMethodCommunication:
+                    _messageService.Publish(new DirectMethodStatusUpdatedMessage(this, value));
+                    break;
+                case Types.C2DCommunication:
+                    _messageService.Publish(new CloudMessageReceivedMessage(this, value));
+                    break;
+                case Types.EventGrid:
+                    _messageService.Publish(new EventGridStatusUpdatedMessage(this, value));
+                    break;
+                default:
+                    Console.WriteLine(value);
+                    break;
+            }
         }
 
-        public void LogDirectMethod(string value)
-        {
-            _messageService.Publish(new DirectMethodStatusUpdatedMessage(this, value));
-        }
-        public void LogEventGrid(string value)
-        {
-            _messageService.Publish(new EventGridStatusUpdatedMessage(this, value));
-        }
         #endregion
     }
 }

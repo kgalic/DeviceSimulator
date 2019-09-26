@@ -29,6 +29,8 @@ namespace DeviceSimulator.Core
 
             SetConnectionStatus();
 
+            ViewModelType = Types.EventGrid;
+
             _deviceStatusChangedMessageToken = _messageService.Subscribe<EventGridStatusUpdatedMessage>(HandleDeviceStatus);
         }
 
@@ -226,7 +228,8 @@ namespace DeviceSimulator.Core
                     catch
                     {
                         var exceptionMessage = _translationsService.GetString("ErrorLoadingFileMessageException");
-                        _consoleLoggerService.LogEventGrid(exceptionMessage);
+                        _consoleLoggerService.Log(value: exceptionMessage,
+                                                  logType: ViewModelType);
                     }
                 });
             }

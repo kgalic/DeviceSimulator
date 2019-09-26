@@ -58,7 +58,8 @@ namespace DeviceSimulator.Core
              || string.IsNullOrEmpty(eventType)
              || string.IsNullOrEmpty(dataVersion))
             {
-                _consoleLoggerService.LogEventGrid(_translationsService.GetString("ParametersNotValid"));
+                _consoleLoggerService.Log(value: _translationsService.GetString("ParametersNotValid"),
+                                          logType: Types.EventGrid);
                 return Task.FromResult(true);
             }
 
@@ -73,7 +74,8 @@ namespace DeviceSimulator.Core
             _eventGridClient = new EventGridClient(topicCredentials);
             _isConnected = true;
 
-            _consoleLoggerService.LogEventGrid(_translationsService.GetString("EventGridConnected"));
+            _consoleLoggerService.Log(value: _translationsService.GetString("EventGridConnected"),
+                                      logType: Types.EventGrid);
 
             return Task.FromResult(true);
         }
@@ -91,7 +93,8 @@ namespace DeviceSimulator.Core
             _eventGridClient.Dispose();
             _eventGridClient = null;
 
-            _consoleLoggerService.LogEventGrid(_translationsService.GetString("EventGridDisconnected"));
+            _consoleLoggerService.Log(value: _translationsService.GetString("EventGridDisconnected"),
+                                      logType: Types.EventGrid);
             return Task.FromResult(true);
         }
 
@@ -112,10 +115,12 @@ namespace DeviceSimulator.Core
 
             await _eventGridClient.PublishEventsAsync(domainHostname, new List<EventGridEvent>() { eventGridEvent });
 
-            _consoleLoggerService.LogEventGrid(string.Format(_translationsService.GetString("EventSent"),
-                                                             Environment.NewLine,
-                                                             request,
-                                                             Environment.NewLine));
+            var logMessage = string.Format(_translationsService.GetString("EventSent"),
+                                           Environment.NewLine,
+                                           request,
+                                           Environment.NewLine);
+            _consoleLoggerService.Log(value: logMessage,
+                                      logType: Types.EventGrid);
         }
 
         #endregion

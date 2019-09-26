@@ -38,6 +38,8 @@ namespace DeviceSimulator.Core.ViewModels
             }
             SetDeviceConnectionStatusForStatus();
 
+            ViewModelType = Types.D2CCommunication;
+
             _deviceStatusChangedMessageToken = _messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
         }
 
@@ -143,7 +145,8 @@ namespace DeviceSimulator.Core.ViewModels
                     catch
                     {
                         var exceptionMessage = _translationsService.GetString("ErrorLoadingFileMessageException");
-                        _consoleLoggerService.Log(exceptionMessage);
+                        _consoleLoggerService.Log(value: exceptionMessage,
+                                                  logType: ViewModelType);
                     }
                 });
             }

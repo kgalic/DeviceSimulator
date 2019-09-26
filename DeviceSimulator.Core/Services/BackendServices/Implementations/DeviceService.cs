@@ -61,9 +61,13 @@ namespace DeviceSimulator.Core
             }
             catch (Exception e)
             {
-                _consoleLoggerService.Log(string.Format(_translationsService.GetString("IoTHubNotReachableMessageException"), 
+                var exceptionMessage = string.Format(_translationsService.GetString("IoTHubNotReachableMessageException"),
                                                         Environment.NewLine,
-                                                        e.Message));
+                                                        e.Message);
+
+                _consoleLoggerService.Log(value: exceptionMessage,
+                                          logType:Types.D2CCommunication);
+
                 _isConnected = false;
             }
             SendDeviceConnectionUpdatedMessage();
@@ -77,7 +81,8 @@ namespace DeviceSimulator.Core
 
             SendDeviceConnectionUpdatedMessage();
 
-            _consoleLoggerService.Log(_translationsService.GetString("DeviceDisconnected"));
+            _consoleLoggerService.Log(_translationsService.GetString("DeviceDisconnected"),
+                                      Types.D2CCommunication);
         }
        
         public bool IsConnected => _isConnected;
@@ -94,10 +99,13 @@ namespace DeviceSimulator.Core
 
             await _deviceClient.SendEventAsync(messageRequest);
 
-            _consoleLoggerService.Log(string.Format(_translationsService.GetString("MessageSent"), 
-                                                    Environment.NewLine,
-                                                    message,
-                                                    Environment.NewLine));
+            var logMessage = string.Format(_translationsService.GetString("MessageSent"),
+                                           Environment.NewLine,
+                                           message,
+                                           Environment.NewLine);
+
+            _consoleLoggerService.Log(value: logMessage,
+                                      logType: Types.D2CCommunication);
         }
 
         public async Task RegisterDirectMethodAsync(DirectMethodSetting directMethod)
@@ -112,15 +120,19 @@ namespace DeviceSimulator.Core
             {
                 MethodCallback callbackMethod = async delegate (MethodRequest methodRequest, object userContext)
                 {
-                    _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodExecuting"),
-                                                          methodName,
-                                                          Environment.NewLine));
+                    var logOutputMessage = string.Format(_translationsService.GetString("MethodExecuting"),
+                                                   methodName,
+                                                   Environment.NewLine);
+                    _consoleLoggerService.Log(value: logOutputMessage,
+                                              logType: Types.DirectMethodCommunication);
 
                     await Task.Delay(TimeSpan.FromSeconds(directMethod.Delay));
 
-                    _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodExecuted"), 
-                                                          methodName,
-                                                          Environment.NewLine));
+                    logOutputMessage = string.Format(_translationsService.GetString("MethodExecuted"),
+                                               methodName,
+                                               Environment.NewLine);
+                    _consoleLoggerService.Log(value: logOutputMessage,
+                                              logType: Types.DirectMethodCommunication);
 
                     return new MethodResponse(200);
                 };
@@ -128,9 +140,12 @@ namespace DeviceSimulator.Core
                 await _deviceClient.SetMethodHandlerAsync(methodName: methodName, callbackMethod, null);
 
                 _directMethodDictionary.Add(methodName, callbackMethod);
-                _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodRegistered"),
-                                                      methodName,
-                                                      Environment.NewLine));
+
+                var logMessage = string.Format(_translationsService.GetString("MethodRegistered"),
+                                               methodName,
+                                               Environment.NewLine);
+                _consoleLoggerService.Log(value: logMessage,
+                                          logType: Types.DirectMethodCommunication);
             }
         }
 
@@ -145,9 +160,12 @@ namespace DeviceSimulator.Core
             {
                 await _deviceClient.SetMethodHandlerAsync(methodName: methodName, null, null);
                 _directMethodDictionary.Remove(methodName);
-                _consoleLoggerService.LogDirectMethod(string.Format(_translationsService.GetString("MethodUnregistered"),
-                                                      methodName,
-                                                      Environment.NewLine));
+
+                var logMessage = string.Format(_translationsService.GetString("MethodUnregistered"),
+                                               methodName,
+                                               Environment.NewLine);
+                _consoleLoggerService.Log(value: logMessage, 
+                                          logType: Types.DirectMethodCommunication);
             }
         }
 
@@ -158,7 +176,8 @@ namespace DeviceSimulator.Core
         private async Task InitializeDevice()
         {
             await _deviceClient.OpenAsync();
-            _consoleLoggerService.Log(_translationsService.GetString("DeviceConnected"));
+            _consoleLoggerService.Log(value: _translationsService.GetString("DeviceConnected"),
+                                      logType: Types.D2CCommunication);
             _isConnected = true;
         }
 
@@ -176,7 +195,9 @@ namespace DeviceSimulator.Core
                 {
                     var streamReader = new StreamReader(cloudToDeviceMessage.BodyStream);
                     var message = await streamReader.ReadToEndAsync();
-                    _messageService.Publish(new CloudMessageReceivedMessage(this, message));
+
+                    _consoleLoggerService.Log(value: message,
+                                              logType: Types.C2DCommunication);
                 }
             }
         }
