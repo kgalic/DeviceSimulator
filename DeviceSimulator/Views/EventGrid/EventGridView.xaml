@@ -28,7 +28,7 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" 
                      PlaceholderText="{Binding EndpointPlaceholder}" 
@@ -49,10 +49,18 @@
                      PlaceholderText="{Binding EventTypePlaceholder}" 
                      Text="{Binding EventType, Mode=TwoWay}"/>
             <Button Grid.Column="6" 
-                    Background="Black" 
-                    Foreground="White" 
-                    Content="{Binding ConnectionStatus, Mode=TwoWay}" 
-                    Command="{Binding ConnectCommand}" />
+                    Margin="1,1,5,1"
+                    Command="{Binding ConnectCommand}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                  Glyph="&#xED5C;"
+                                                  FontSize="18" 
+                                                  Margin="5,2,5,2"/>
+                        <TextBlock Text="{Binding ConnectionStatus}" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -93,10 +101,18 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" 
-                        Background="Black" 
-                        Foreground="White" 
-                        Content="{Binding SendMessageString}" 
-                        Command="{Binding SendMessageCommand}" />
+                        Margin="1,1,5,1"
+                        Command="{Binding SendMessageCommand}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                      Glyph="&#xE724;"
+                                      FontSize="18" 
+                                      Margin="5,2,5,2"/>
+                            <TextBlock Text="{Binding SendMessageString}" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -107,16 +123,32 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Background="Black" 
-                                Foreground="White" 
-                                Grid.Column="0"
-                                Content="{Binding SaveString, Mode=TwoWay}" 
-                                Command="{Binding SaveSettingsCommand}" />
-                        <Button Background="Black" 
-                                Foreground="White" 
-                                Grid.Column="1"
-                                Content="{Binding LoadString, Mode=TwoWay}" 
-                                Command="{Binding LoadSettingsCommand}" />
+                        <Button Grid.Column="0" 
+                                Margin="1,1,1,1"
+                                Command="{Binding SaveSettingsCommand}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                  Glyph="&#xE792;"
+                                                  FontSize="18" 
+                                                  Margin="5,2,5,2"/>
+                                    <TextBlock Text="{Binding SaveString}" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
+                        <Button Grid.Column="1" 
+                                Margin="1,1,1,1"
+                                Command="{Binding LoadSettingsCommand}">
+                            <Button.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                  Glyph="&#xE8C3;"
+                                                  FontSize="18" 
+                                                  Margin="5,2,5,2"/>
+                                    <TextBlock Text="{Binding LoadString}" />
+                                </StackPanel>
+                            </Button.Content>
+                        </Button>
                     </Grid>
                 </Grid>
             </Grid>
@@ -125,11 +157,19 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Button Background="Black" 
-                        Foreground="White" 
-                        Grid.Column="0"
-                        Content="{Binding TimerStatusTitle, Mode=TwoWay}" 
-                        Command="{Binding StartTimerServiceCommand}" />
+                <Button Grid.Column="0" 
+                                Margin="1,1,1,1"
+                                Command="{Binding StartTimerServiceCommand}">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                  Glyph="&#xE916;"
+                                                  FontSize="18" 
+                                                  Margin="5,2,5,2"/>
+                            <TextBlock Text="{Binding TimerStatusTitle}" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
                 <Slider Margin="0,0,10,0"
                         Grid.Column="1"
                         Visibility="{Binding IsDelayRangeVisible, Mode=OneWay, 

@@ -29,10 +29,18 @@
                      PlaceholderText="{Binding DirectMethodNamePlaceholder}" 
                      Text="{Binding DirectMethodEntry, Mode=TwoWay}"/>
             <Button Grid.Column="1" 
-                    Background="Black" 
-                    Foreground="White" 
-                    Content="{Binding AddDirectMethodString, Mode=TwoWay}" 
-                    Command="{Binding AddDirectMethodCommand}"/>
+                    Margin="1,1,5,1"
+                    Command="{Binding AddDirectMethodCommand}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                                  Glyph="&#xECC8;"
+                                                  FontSize="18" 
+                                                  Margin="5,2,5,2"/>
+                        <TextBlock Text="{Binding AddDirectMethodString}" />
+                    </StackPanel>
+                </Button.Content>
+            </Button>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
