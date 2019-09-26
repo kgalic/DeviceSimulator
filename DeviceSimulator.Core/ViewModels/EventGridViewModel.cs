@@ -13,6 +13,8 @@ namespace DeviceSimulator.Core
     {
         #region Fields
 
+        protected readonly ITimerService<EventGridViewModel> _timerService;
+
         private MvxSubscriptionToken _deviceStatusChangedMessageToken;
 
         private EventGridSetting _eventGridSetting;
@@ -24,6 +26,7 @@ namespace DeviceSimulator.Core
         public EventGridViewModel(IEventGridService eventGridService)
         {
             _publisherService = eventGridService;
+            _timerService = Mvx.IoCProvider.Resolve<ITimerService<EventGridViewModel>>();
 
             _eventGridSetting = new EventGridSetting();
 
@@ -32,6 +35,7 @@ namespace DeviceSimulator.Core
             ViewModelType = Types.EventGrid;
 
             _deviceStatusChangedMessageToken = _messageService.Subscribe<EventGridStatusUpdatedMessage>(HandleDeviceStatus);
+            _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<EventGridViewModel>>(HandleTimerTrigger);
         }
 
         #endregion
@@ -128,6 +132,8 @@ namespace DeviceSimulator.Core
                 RaisePropertyChanged(() => EventType);
             }
         }
+
+        public override bool IsRunning => _timerService.IsRunning;
 
         #endregion
 
@@ -243,6 +249,24 @@ namespace DeviceSimulator.Core
 
         #endregion
 
+        #region ProtectedMethods
+
+        protected override void StartTimer()
+        {
+            _isTimerOn = true;
+            _messageService.Publish(new StartTimerServiceMessage<EventGridViewModel>(this, DelayInMiliseconds));
+            TimerStatusTitle = _translationsService.GetString("StopTimer");
+        }
+
+        protected override void StopTimer()
+        {
+            _isTimerOn = false;
+            _messageService.Publish(new StopTimerServiceMessage<EventGridViewModel>(this));
+            TimerStatusTitle = _translationsService.GetString("StartTimer");
+        }
+
+        #endregion
+
         #region Private Methods
 
         private void HandleDeviceStatus(EventGridStatusUpdatedMessage message)
@@ -253,24 +277,15 @@ namespace DeviceSimulator.Core
             }
         }
 
+        protected void HandleTimerTrigger(TimerServiceTriggeredMessage<EventGridViewModel> message)
+        {
+            SendMessagePayload();
+        }
+
         private void SetConnectionStatus()
         {
             ConnectionStatus = EventGridServiceInstance.IsConnected ? _translationsService.GetString("Disconnect")
                                                                     : _translationsService.GetString("Connect");
-        }
-
-        private void StartTimer()
-        {
-            _isTimerOn = true;
-            _messageService.Publish(new StartTimerServiceMessage(this));
-            TimerStatusTitle = _translationsService.GetString("StopTimer");
-        }
-
-        private void StopTimer()
-        {
-            _isTimerOn = false;
-            _messageService.Publish(new StopTimerServiceMessage(this));
-            TimerStatusTitle = _translationsService.GetString("StartTimer");
         }
 
         private async Task ResetAll()

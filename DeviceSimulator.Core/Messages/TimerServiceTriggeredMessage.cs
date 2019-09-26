@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
-    public class TimerServiceTriggeredMessage : MvxMessage
+    public class TimerServiceTriggeredMessage<T> : MvxMessage where T : BasePublisherViewModel
     {
         public TimerServiceTriggeredMessage(object sender) : base(sender) { }
     }

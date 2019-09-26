@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
-    public class StopTimerServiceMessage : MvxMessage
+    public class StopTimerServiceMessage<T> : MvxMessage where T : BasePublisherViewModel
     {
         public StopTimerServiceMessage(object sender) : base(sender) { }
     }

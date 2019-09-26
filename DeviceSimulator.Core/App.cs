@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using DeviceSimulator.Core.ViewModels;
+using MvvmCross;
 using MvvmCross.IoC;
 using MvvmCross.ViewModels;
 using System;
@@ -34,7 +35,8 @@ namespace DeviceSimulator.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITranslationsService, TranslationsService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceSettingDataService, DeviceSettingDataService>();
 
-            Mvx.IoCProvider.RegisterType<ITimerService, TimerService>();
+            Mvx.IoCProvider.RegisterType<ITimerService<EventGridViewModel>, TimerService<EventGridViewModel>>();
+            Mvx.IoCProvider.RegisterType<ITimerService<HomeViewModel>, TimerService<HomeViewModel>>();
             Mvx.IoCProvider.RegisterType<IConsoleLoggerService, ConsoleLoggerService>();
         }
     }

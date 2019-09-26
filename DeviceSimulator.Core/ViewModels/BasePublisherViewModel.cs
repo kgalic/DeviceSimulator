@@ -19,7 +19,6 @@ namespace DeviceSimulator.Core
 
         protected IPublisherService _publisherService;
 
-        protected readonly ITimerService _timerService;
         protected readonly IMvxMessenger _messageService;
         protected readonly ITranslationsService _translationsService;
         protected readonly IFilePickerService _filePickerService;
@@ -42,18 +41,16 @@ namespace DeviceSimulator.Core
 
         public BasePublisherViewModel()
         {
-            _timerService = Mvx.IoCProvider.Resolve<ITimerService>();
             _translationsService = Mvx.IoCProvider.Resolve<ITranslationsService>();
             _consoleLoggerService = Mvx.IoCProvider.Resolve<IConsoleLoggerService>();
             _messageService = Mvx.IoCProvider.Resolve<IMvxMessenger>();
             _filePickerService = Mvx.IoCProvider.Resolve<IFilePickerService>();
-           
+
             TimerStatusTitle = _translationsService.GetString("StartTimer"); ;
             _delayInSeconds = SliderMinimum;
 
             OutputLog = string.Empty;
 
-            _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage>(HandleTimerTrigger);
         }
 
         #endregion
@@ -131,7 +128,7 @@ namespace DeviceSimulator.Core
                 _delayInSeconds = value;
                 if (_isTimerOn)
                 {
-                    _messageService.Publish(new StartTimerServiceMessage(this, DelayInMiliseconds));
+                    StartTimer();
                 }
                 RaisePropertyChanged(() => DelayInSeconds);
             }
@@ -144,6 +141,12 @@ namespace DeviceSimulator.Core
             get;
             set;
         }
+
+        public abstract bool IsRunning
+        {
+            get;
+        }
+            
 
         #endregion
 
@@ -205,7 +208,7 @@ namespace DeviceSimulator.Core
             {
                 return new MvxCommand(() =>
                 {
-                    if (_timerService.IsRunning)
+                    if (IsRunning)
                     {
                         StopTimer();
                     }
@@ -219,20 +222,15 @@ namespace DeviceSimulator.Core
 
         #endregion
 
-        #region Private Methods
+        #region Protected Methods
 
-        private void SetConnectionStatus()
+        protected void SetConnectionStatus()
         {
             ConnectionStatus = _publisherService.IsConnected ? _translationsService.GetString("Disconnect")
                                                                 : _translationsService.GetString("Connect");
         }
 
-        private void HandleTimerTrigger(MvxMessage message)
-        {
-            SendMessagePayload();
-        }
-
-        private async Task SendMessagePayload()
+        protected async Task SendMessagePayload()
         {
             try
             {
@@ -248,21 +246,11 @@ namespace DeviceSimulator.Core
             }
         }
 
-        private void StartTimer()
-        {
-            _isTimerOn = true;
-            _messageService.Publish(new StartTimerServiceMessage(this, DelayInMiliseconds));
-            TimerStatusTitle = _translationsService.GetString("StopTimer");
-        }
+        protected abstract void StartTimer();
 
-        private void StopTimer()
-        {
-            _isTimerOn = false;
-            _messageService.Publish(new StopTimerServiceMessage(this));
-            TimerStatusTitle = _translationsService.GetString("StartTimer");
-        }
+        protected abstract void StopTimer();
 
-        private async Task ResetAll()
+        protected async Task ResetAll()
         {
             StopTimer();
 

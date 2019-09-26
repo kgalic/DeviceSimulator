@@ -13,6 +13,7 @@ namespace DeviceSimulator.Core.ViewModels
         #region Fields
 
         protected readonly IDeviceSettingDataService _deviceSettingDataService;
+        protected readonly ITimerService<HomeViewModel> _timerService;
 
         private MvxSubscriptionToken _deviceStatusChangedMessageToken;
 
@@ -26,6 +27,7 @@ namespace DeviceSimulator.Core.ViewModels
         {
             _publisherService = deviceService;
             _deviceSettingDataService = Mvx.IoCProvider.Resolve<IDeviceSettingDataService>();
+            _timerService = Mvx.IoCProvider.Resolve<ITimerService<HomeViewModel>>();
 
             if (_deviceSettingDataService.DeviceSetting != null)
             {
@@ -41,6 +43,7 @@ namespace DeviceSimulator.Core.ViewModels
             ViewModelType = Types.D2CCommunication;
 
             _deviceStatusChangedMessageToken = _messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
+            _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<HomeViewModel>>(HandleTimerTrigger);
         }
 
         public override void ViewDisappearing()
@@ -78,6 +81,8 @@ namespace DeviceSimulator.Core.ViewModels
                 RaisePropertyChanged(() => MessagePayload);
             }
         }
+
+        public override bool IsRunning => _timerService.IsRunning;
 
         #endregion
 
@@ -160,6 +165,24 @@ namespace DeviceSimulator.Core.ViewModels
 
         #endregion
 
+        #region ProtectedMethods
+
+        protected override void StartTimer()
+        {
+            _isTimerOn = true;
+            _messageService.Publish(new StartTimerServiceMessage<HomeViewModel>(this, DelayInMiliseconds));
+            TimerStatusTitle = _translationsService.GetString("StopTimer");
+        }
+
+        protected override void StopTimer()
+        {
+            _isTimerOn = false;
+            _messageService.Publish(new StopTimerServiceMessage<HomeViewModel>(this));
+            TimerStatusTitle = _translationsService.GetString("StartTimer");
+        }
+
+        #endregion
+
         #region Private Methods
 
         private void HandleDeviceStatus(DeviceStatusUpdatedMessage message)
@@ -170,24 +193,15 @@ namespace DeviceSimulator.Core.ViewModels
             }
         }
 
+        protected void HandleTimerTrigger(TimerServiceTriggeredMessage<HomeViewModel> message)
+        {
+            SendMessagePayload();
+        }
+
         private void SetDeviceConnectionStatusForStatus()
         {
             ConnectionStatus = DeviceService.IsConnected ? _translationsService.GetString("Disconnect") 
                                                                 : _translationsService.GetString("Connect");
-        }
-
-        private void StartTimer()
-        {
-            _isTimerOn = true;
-            _messageService.Publish(new StartTimerServiceMessage(this));
-            TimerStatusTitle = _translationsService.GetString("StopTimer");
-        }
-
-        private void StopTimer()
-        {
-            _isTimerOn = false;
-            _messageService.Publish(new StopTimerServiceMessage(this));
-            TimerStatusTitle = _translationsService.GetString("StartTimer");
         }
 
         private async Task ResetAll()

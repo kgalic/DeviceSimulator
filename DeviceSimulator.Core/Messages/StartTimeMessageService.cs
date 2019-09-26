@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
-    public class StartTimerServiceMessage : MvxMessage
+    public class StartTimerServiceMessage<T> : MvxMessage where T : BasePublisherViewModel
     {
         private int _intervalInMiliseconds;
 

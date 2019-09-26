@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
-    public class TimerService : ITimerService
+    public class TimerService<T> : ITimerService<T> where T : BasePublisherViewModel
     {
         private readonly IMvxMessenger _messageService;
 
@@ -22,8 +22,8 @@ namespace DeviceSimulator.Core
         {
             _messageService = messageService;
 
-            _stopTimerMessageToken = messageService.Subscribe<StopTimerServiceMessage>(StopTimer);
-            _startTimerMessageToken = messageService.Subscribe<StartTimerServiceMessage>(StartTimer);
+            _stopTimerMessageToken = messageService.Subscribe<StopTimerServiceMessage<T>>(StopTimer);
+            _startTimerMessageToken = messageService.Subscribe<StartTimerServiceMessage<T>>(StartTimer);
         }
 
         public bool IsRunning => _isRunning;
@@ -42,7 +42,7 @@ namespace DeviceSimulator.Core
             _isRunning = false;
         }
 
-        private void StartTimer(StartTimerServiceMessage message)
+        private void StartTimer(StartTimerServiceMessage<T> message)
         {
             if (message.IntervalInMiliseconds != 0)
             {
@@ -57,7 +57,7 @@ namespace DeviceSimulator.Core
             while (_isRunning)
             {
                 await Task.Delay(_intervalInMiliseconds);
-                _messageService.Publish(new TimerServiceTriggeredMessage(this));
+                _messageService.Publish(new TimerServiceTriggeredMessage<T>(this));
             }
         }
     }

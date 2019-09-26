@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
 {
-    public interface ITimerService
+    public interface ITimerService<T> where T : BasePublisherViewModel
     {
         bool IsRunning { get; }
 
