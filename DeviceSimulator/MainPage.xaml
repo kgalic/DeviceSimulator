@@ -14,7 +14,7 @@
         <NavigationView x:Name="NavView"
                         ItemInvoked="NavView_ItemInvoked"
                         PaneDisplayMode="Top" 
-                        IsTabStop="False" 
+                        IsTabStop="true" 
                         IsBackButtonVisible="Collapsed"
                         IsSettingsVisible="False">
             <NavigationView.MenuItems>

@@ -53,5 +53,5 @@
 
   <!-- Save/Load Configuration -->
   <string name="JsonConfig">JSON configuration</string>
-  <string name="DeviceConfigFileName">IoT Device Config</string>
+  <string name="DeviceConfigFileName">Config</string>
 </resources>
