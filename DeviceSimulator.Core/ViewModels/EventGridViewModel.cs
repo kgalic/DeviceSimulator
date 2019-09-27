@@ -2,9 +2,6 @@
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DeviceSimulator.Core
@@ -15,7 +12,7 @@ namespace DeviceSimulator.Core
 
         protected readonly ITimerService<EventGridViewModel> _timerService;
 
-        private MvxSubscriptionToken _deviceStatusChangedMessageToken;
+        private MvxSubscriptionToken _statusChangedMessageToken;
 
         private EventGridSetting _eventGridSetting;
 
@@ -32,9 +29,9 @@ namespace DeviceSimulator.Core
 
             SetConnectionStatus();
 
-            ViewModelType = Types.EventGrid;
+            ConsoleLogType = ConsoleLogTypes.EventGrid;
 
-            _deviceStatusChangedMessageToken = _messageService.Subscribe<EventGridStatusUpdatedMessage>(HandleDeviceStatus);
+            _statusChangedMessageToken = _messageService.Subscribe<EventGridStatusUpdatedMessage>(HandleStatusUpdatedMessage);
             _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<EventGridViewModel>>(HandleTimerTrigger);
         }
 
@@ -235,7 +232,7 @@ namespace DeviceSimulator.Core
                     {
                         var exceptionMessage = _translationsService.GetString("ErrorLoadingFileMessageException");
                         _consoleLoggerService.Log(value: exceptionMessage,
-                                                  logType: ViewModelType);
+                                                  logType: ConsoleLogType);
                     }
                 });
             }
@@ -269,7 +266,7 @@ namespace DeviceSimulator.Core
 
         #region Private Methods
 
-        private void HandleDeviceStatus(EventGridStatusUpdatedMessage message)
+        private void HandleStatusUpdatedMessage(EventGridStatusUpdatedMessage message)
         {
             if (!string.IsNullOrEmpty(message.Status))
             {
@@ -277,29 +274,9 @@ namespace DeviceSimulator.Core
             }
         }
 
-        protected void HandleTimerTrigger(TimerServiceTriggeredMessage<EventGridViewModel> message)
+        private void HandleTimerTrigger(TimerServiceTriggeredMessage<EventGridViewModel> message)
         {
             SendMessagePayload();
-        }
-
-        private void SetConnectionStatus()
-        {
-            ConnectionStatus = EventGridServiceInstance.IsConnected ? _translationsService.GetString("Disconnect")
-                                                                    : _translationsService.GetString("Connect");
-        }
-
-        private async Task ResetAll()
-        {
-            StopTimer();
-
-            if (EventGridServiceInstance.IsConnected)
-            {
-                await EventGridServiceInstance.Disconnect().ConfigureAwait(false); ;
-            }
-
-            SetConnectionStatus();
-
-            OutputLog = string.Empty;
         }
 
         #endregion

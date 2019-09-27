@@ -15,6 +15,7 @@ namespace DeviceSimulator.Core
 
         private readonly ITranslationsService _translationsService;
         private readonly IConsoleLoggerService _consoleLoggerService;
+        private readonly IMessageExpressionService _messageExpressionService;
 
         private EventGridClient _eventGridClient;
 
@@ -32,10 +33,12 @@ namespace DeviceSimulator.Core
         #region Constructors
 
         public EventGridService(ITranslationsService translationsService,
-                                IConsoleLoggerService consoleLoggerService)
+                                IConsoleLoggerService consoleLoggerService,
+                                IMessageExpressionService messageExpressionService)
         {
             _consoleLoggerService = consoleLoggerService;
             _translationsService = translationsService;
+            _messageExpressionService = messageExpressionService;
         }
 
         #endregion
@@ -59,7 +62,7 @@ namespace DeviceSimulator.Core
              || string.IsNullOrEmpty(dataVersion))
             {
                 _consoleLoggerService.Log(value: _translationsService.GetString("ParametersNotValid"),
-                                          logType: Types.EventGrid);
+                                          logType: ConsoleLogTypes.EventGrid);
                 return Task.FromResult(true);
             }
 
@@ -75,7 +78,7 @@ namespace DeviceSimulator.Core
             _isConnected = true;
 
             _consoleLoggerService.Log(value: _translationsService.GetString("EventGridConnected"),
-                                      logType: Types.EventGrid);
+                                      logType: ConsoleLogTypes.EventGrid);
 
             return Task.FromResult(true);
         }
@@ -94,12 +97,14 @@ namespace DeviceSimulator.Core
             _eventGridClient = null;
 
             _consoleLoggerService.Log(value: _translationsService.GetString("EventGridDisconnected"),
-                                      logType: Types.EventGrid);
+                                      logType: ConsoleLogTypes.EventGrid);
             return Task.FromResult(true);
         }
 
         public async Task SendRequest(string request)
         {
+            request = _messageExpressionService.ParseMessageExpressions(request);
+
             dynamic obj = JsonConvert.DeserializeObject(request);
             var eventGridEvent = new EventGridEvent()
             {
@@ -120,7 +125,7 @@ namespace DeviceSimulator.Core
                                            request,
                                            Environment.NewLine);
             _consoleLoggerService.Log(value: logMessage,
-                                      logType: Types.EventGrid);
+                                      logType: ConsoleLogTypes.EventGrid);
         }
 
         #endregion

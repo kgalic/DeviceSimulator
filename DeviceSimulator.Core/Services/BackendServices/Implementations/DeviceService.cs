@@ -66,7 +66,7 @@ namespace DeviceSimulator.Core
                                                         e.Message);
 
                 _consoleLoggerService.Log(value: exceptionMessage,
-                                          logType:Types.D2CCommunication);
+                                          logType:ConsoleLogTypes.D2CCommunication);
 
                 _isConnected = false;
             }
@@ -82,7 +82,7 @@ namespace DeviceSimulator.Core
             SendDeviceConnectionUpdatedMessage();
 
             _consoleLoggerService.Log(_translationsService.GetString("DeviceDisconnected"),
-                                      Types.D2CCommunication);
+                                      ConsoleLogTypes.D2CCommunication);
         }
        
         public bool IsConnected => _isConnected;
@@ -105,7 +105,7 @@ namespace DeviceSimulator.Core
                                            Environment.NewLine);
 
             _consoleLoggerService.Log(value: logMessage,
-                                      logType: Types.D2CCommunication);
+                                      logType: ConsoleLogTypes.D2CCommunication);
         }
 
         public async Task RegisterDirectMethodAsync(DirectMethodSetting directMethod)
@@ -124,7 +124,7 @@ namespace DeviceSimulator.Core
                                                    methodName,
                                                    Environment.NewLine);
                     _consoleLoggerService.Log(value: logOutputMessage,
-                                              logType: Types.DirectMethodCommunication);
+                                              logType: ConsoleLogTypes.DirectMethodCommunication);
 
                     await Task.Delay(TimeSpan.FromSeconds(directMethod.Delay));
 
@@ -132,7 +132,7 @@ namespace DeviceSimulator.Core
                                                methodName,
                                                Environment.NewLine);
                     _consoleLoggerService.Log(value: logOutputMessage,
-                                              logType: Types.DirectMethodCommunication);
+                                              logType: ConsoleLogTypes.DirectMethodCommunication);
 
                     return new MethodResponse(200);
                 };
@@ -145,7 +145,7 @@ namespace DeviceSimulator.Core
                                                methodName,
                                                Environment.NewLine);
                 _consoleLoggerService.Log(value: logMessage,
-                                          logType: Types.DirectMethodCommunication);
+                                          logType: ConsoleLogTypes.DirectMethodCommunication);
             }
         }
 
@@ -165,7 +165,7 @@ namespace DeviceSimulator.Core
                                                methodName,
                                                Environment.NewLine);
                 _consoleLoggerService.Log(value: logMessage, 
-                                          logType: Types.DirectMethodCommunication);
+                                          logType: ConsoleLogTypes.DirectMethodCommunication);
             }
         }
 
@@ -177,7 +177,7 @@ namespace DeviceSimulator.Core
         {
             await _deviceClient.OpenAsync();
             _consoleLoggerService.Log(value: _translationsService.GetString("DeviceConnected"),
-                                      logType: Types.D2CCommunication);
+                                      logType: ConsoleLogTypes.D2CCommunication);
             _isConnected = true;
         }
 
@@ -197,7 +197,7 @@ namespace DeviceSimulator.Core
                     var message = await streamReader.ReadToEndAsync();
 
                     _consoleLoggerService.Log(value: message,
-                                              logType: Types.C2DCommunication);
+                                              logType: ConsoleLogTypes.C2DCommunication);
                 }
             }
         }

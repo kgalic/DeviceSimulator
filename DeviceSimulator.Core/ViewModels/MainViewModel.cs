@@ -21,7 +21,8 @@ namespace DeviceSimulator.Core
             ("home", typeof(HomeViewModel)),
             ("direct_method", typeof(DirectMethodCommunicationViewModel)),
             ("c2d_messages", typeof(CloudToDeviceCommunicationViewModel)),
-            ("event_grid", typeof(EventGridViewModel))
+            ("event_grid", typeof(EventGridViewModel)),
+            ("service_bus", typeof(ServiceBusViewModel))
         };
 
         private readonly IDeviceService _deviceService;
@@ -79,6 +80,10 @@ namespace DeviceSimulator.Core
                 else if (type == typeof(EventGridViewModel))
                 {
                     Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<EventGridViewModel>();
+                }
+                else if (type == typeof(ServiceBusViewModel))
+                {
+                    Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<ServiceBusViewModel>();
                 }
             });
         }

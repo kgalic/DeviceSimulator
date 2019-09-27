@@ -40,7 +40,7 @@ namespace DeviceSimulator.Core.ViewModels
             }
             SetDeviceConnectionStatusForStatus();
 
-            ViewModelType = Types.D2CCommunication;
+            ConsoleLogType = ConsoleLogTypes.D2CCommunication;
 
             _deviceStatusChangedMessageToken = _messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
             _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<HomeViewModel>>(HandleTimerTrigger);
@@ -151,7 +151,7 @@ namespace DeviceSimulator.Core.ViewModels
                     {
                         var exceptionMessage = _translationsService.GetString("ErrorLoadingFileMessageException");
                         _consoleLoggerService.Log(value: exceptionMessage,
-                                                  logType: ViewModelType);
+                                                  logType: ConsoleLogType);
                     }
                 });
             }

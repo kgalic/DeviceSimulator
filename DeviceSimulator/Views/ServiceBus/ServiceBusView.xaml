@@ -1,5 +1,5 @@
-﻿<views:MvxWindowsPage   
-    x:Class="DeviceSimulator.Views.EventGrid.EventGridView"
+﻿<views:MvxWindowsPage  
+    x:Class="DeviceSimulator.Views.ServiceBus.ServiceBusView"
     xmlns:views="using:MvvmCross.Platforms.Uap.Views" 
     xmlns:local="using:DeviceSimulator.Converters"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -24,30 +24,21 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="200"/>
                 <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" 
-                     PlaceholderText="{Binding EndpointPlaceholder}" 
-                     Text="{Binding Endpoint, Mode=TwoWay}"/>
+                     PlaceholderText="{Binding ConnectionStringPlaceholder}" 
+                     Text="{Binding ConnectionString, Mode=TwoWay}"/>
             <TextBox Grid.Column="1" 
-                     PlaceholderText="{Binding KeyPlaceholder}" 
-                     Text="{Binding Key, Mode=TwoWay}"/>
-            <TextBox Grid.Column="2" 
-                     PlaceholderText="{Binding TopicNamePlaceholder}" 
-                     Text="{Binding TopicName, Mode=TwoWay}"/>
-            <TextBox Grid.Column="3" 
-                     PlaceholderText="{Binding SubjectPlaceholder}" 
-                     Text="{Binding Subject, Mode=TwoWay}"/>
-            <TextBox Grid.Column="4" 
-                     PlaceholderText="{Binding DataVersionPlaceholder}" 
-                     Text="{Binding DataVersion, Mode=TwoWay}"/>
-            <TextBox Grid.Column="5" 
-                     PlaceholderText="{Binding EventTypePlaceholder}" 
-                     Text="{Binding EventType, Mode=TwoWay}"/>
-            <Button Grid.Column="6" 
+                     PlaceholderText="{Binding EntityNamePlaceholder}" 
+                     Text="{Binding EntityName, Mode=TwoWay}"/>
+            <ComboBox Grid.Column="2" 
+                      Margin="5,5,5,5"
+                      ItemsSource="{Binding ServiceBusEntityOptions}"
+                      SelectedIndex ="{Binding ServiceBusEntityOptionsSelectedIndexId, Mode=TwoWay}">
+                
+            </ComboBox>
+            <Button Grid.Column="3" 
                     Margin="1,1,5,1"
                     Command="{Binding ConnectCommand}">
                 <Button.Content>

@@ -52,6 +52,14 @@
                                               FontSize="12"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Content="Service Bus" 
+                                    Tag="service_bus">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                              Glyph="&#xE8C2;"
+                                              FontSize="12"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.Content>
                 <Frame x:Name="ContentFrame">

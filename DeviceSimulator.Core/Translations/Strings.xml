@@ -32,9 +32,18 @@
   <string name="SubjectPlaceholder">Subject</string>
   <string name="DataVersionPlaceholder">Data version</string>
   <string name="EventTypePlaceholder">Event type</string>
-  <string name="EventSent">Event has been sent: {0}{1}{2}</string>
+  <string name="EventSent">The event has been sent: {0}{1}{2}</string>
   <string name="EventGridDisconnected">Disconnected</string>
   <string name="EventGridConnected">Connected</string>
+
+  <!-- Service Bus View -->
+  <string name="ServiceBusConnectionStringPlaceholder">Connection String</string>
+  <string name="EntityNamePlaceholder">Entity Name</string>
+  <string name="ServiceBusDisconnected">Disconnected</string>
+  <string name="ServiceBusConnected">Connected</string>
+  <string name="Queue">Queue</string>
+  <string name="Topic">Topic</string>
+  <string name="ServiceBusMessageSent">The message has been sent: {0}{1}{2}</string>
 
   <!-- Exception Messages -->
   <string name="SendingMessageException">Exception occured while sending Message!</string>

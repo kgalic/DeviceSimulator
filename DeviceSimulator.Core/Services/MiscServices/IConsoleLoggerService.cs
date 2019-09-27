@@ -6,14 +6,15 @@ namespace DeviceSimulator.Core
 {
     public interface IConsoleLoggerService
     {
-        void Log(string value, Types logType);
+        void Log(string value, ConsoleLogTypes logType);
     }
 
-    public enum Types
+    public enum ConsoleLogTypes
     {
         D2CCommunication,
         DirectMethodCommunication,
         C2DCommunication,
-        EventGrid
+        EventGrid,
+        ServiceBus
     }
 }

@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.20.0" />
     <PackageReference Include="Microsoft.Azure.EventGrid" Version="3.2.0" />
+    <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.0.0" />
     <PackageReference Include="MvvmCross" Version="6.2.3" />
     <PackageReference Include="MvvmCross.Plugin.Messenger" Version="6.2.3" />
   </ItemGroup>

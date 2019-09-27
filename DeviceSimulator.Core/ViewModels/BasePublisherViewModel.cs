@@ -136,7 +136,7 @@ namespace DeviceSimulator.Core
 
         public int DelayInMiliseconds => DelayInSeconds * 1000;
 
-        public Types ViewModelType
+        public ConsoleLogTypes ConsoleLogType
         {
             get;
             set;
@@ -242,7 +242,7 @@ namespace DeviceSimulator.Core
             catch
             {
                 _consoleLoggerService.Log(value: _translationsService.GetString("SendingMessageException"),
-                                          logType: ViewModelType);
+                                          logType: ConsoleLogType);
             }
         }
 

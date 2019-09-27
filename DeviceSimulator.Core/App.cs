@@ -34,9 +34,11 @@ namespace DeviceSimulator.Core
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IMessageExpressionService, MessageExpressionService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITranslationsService, TranslationsService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceSettingDataService, DeviceSettingDataService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IServiceBusPublisherService, ServiceBusPublisherService>();
 
             Mvx.IoCProvider.RegisterType<ITimerService<EventGridViewModel>, TimerService<EventGridViewModel>>();
             Mvx.IoCProvider.RegisterType<ITimerService<HomeViewModel>, TimerService<HomeViewModel>>();
+            Mvx.IoCProvider.RegisterType<ITimerService<ServiceBusViewModel>, TimerService<ServiceBusViewModel>>();
             Mvx.IoCProvider.RegisterType<IConsoleLoggerService, ConsoleLoggerService>();
         }
     }
