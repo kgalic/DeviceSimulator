@@ -30,7 +30,6 @@ namespace DeviceSimulator.Core
         {
             _publisherService = serviceBusPublisherService;
             _timerService = Mvx.IoCProvider.Resolve<ITimerService<ServiceBusViewModel>>();
-
             _serviceBusSetting = new ServiceBusSetting();
 
             SetConnectionStatus();

@@ -24,6 +24,7 @@
   <string name="MethodUnregistered">Unregistered method: {0}{1}</string>
   <string name="RegisterMethod">Register</string>
   <string name="UnregisterMethod">Unregister</string>
+  <string name="ExistingMethod">Method already exists!</string>
 
   <!-- Event Grid View -->
   <string name="EndpointPlaceholder">Domain or Topic Endpoint</string>
@@ -49,7 +50,7 @@
   <string name="SendingMessageException">Exception occured while sending Message!</string>
   <string name="ParametersNotValid">Provided parameters are not valid!</string>
   <string name="IoTHubNotReachableMessageException">IoT hub cannot be reached{0}{1}</string>
-  <string name="ErrorLoadingFileMessageException">File format not correct. Please make sure the file is not corrupted.</string>
+  <string name="ErrorLoadingFileMessageException">Loading file not succeed</string>
 
   <!-- Save/Load Configuration -->
   <string name="JsonConfig">JSON configuration</string>

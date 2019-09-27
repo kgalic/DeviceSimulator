@@ -111,11 +111,19 @@ namespace DeviceSimulator.Core
             {
                 if (!string.IsNullOrEmpty(DirectMethodEntry))
                 {
-                    var directMethodSetting = new DirectMethodSetting(DirectMethodEntry);
-                    var directMethodViewItem = CreateDirectMethodViewItem(directMethodSetting);
-                    _directMethodSettingViewItems.Add(directMethodViewItem);
-                    DirectMethodEntry = string.Empty;
-                    RaisePropertyChanged(() => ViewItems);
+                    if (_directMethodSettingViewItems.FirstOrDefault(item => item.DirectMethodSetting.DirectMethodName == DirectMethodEntry) == null)
+                    {
+                        var directMethodSetting = new DirectMethodSetting(DirectMethodEntry);
+                        var directMethodViewItem = CreateDirectMethodViewItem(directMethodSetting);
+                        _directMethodSettingViewItems.Add(directMethodViewItem);
+                        DirectMethodEntry = string.Empty;
+                        RaisePropertyChanged(() => ViewItems);
+                    }
+                    else
+                    {
+                        Mvx.IoCProvider.Resolve<IConsoleLoggerService>().Log(value: _translationsService.GetString("ExistingMethod"),
+                                                                             logType: ConsoleLogTypes.DirectMethodCommunication);
+                    }
                 }
             });
         }
