@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class MessageExpressionService : IMessageExpressionService
     {

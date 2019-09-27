@@ -1,4 +1,4 @@
-﻿using DeviceSimulator.Core;
+﻿using MessagePublisher.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Storage.Streams;
 
-namespace DeviceSimulator
+namespace MessagePublisher
 {
     public class FilePickerService : IFilePickerService
     {

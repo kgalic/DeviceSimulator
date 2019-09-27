@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class TimerService<T> : ITimerService<T> where T : BasePublisherViewModel
     {

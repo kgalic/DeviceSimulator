@@ -8,7 +8,7 @@ using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using Newtonsoft.Json;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class ServiceBusViewModel : BasePublisherViewModel
     {

@@ -1,9 +1,9 @@
 ﻿<UserControl
     x:Name="NumericControl"
-    x:Class="DeviceSimulator.Controls.NumericUpDownControl"
+    x:Class="MessagePublisher.Controls.NumericUpDownControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DeviceSimulator.Controls"
+    xmlns:local="using:MessagePublisher.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"

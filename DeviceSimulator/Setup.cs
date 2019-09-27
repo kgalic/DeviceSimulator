@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using MvvmCross.Platforms.Uap.Presenters;
 using MvvmCross.Platforms.Uap.Views;
-using DeviceSimulator.Core;
+using MessagePublisher.Core;
 
-namespace DeviceSimulator
+namespace MessagePublisher
 {
     public class Setup : MvxWindowsSetup<Core.App>
     {
@@ -29,7 +29,7 @@ namespace DeviceSimulator
 
         protected override IMvxApplication CreateApp()
         {
-            return new DeviceSimulator.Core.App();
+            return new MessagePublisher.Core.App();
         }
 
         protected override void InitializeLastChance()

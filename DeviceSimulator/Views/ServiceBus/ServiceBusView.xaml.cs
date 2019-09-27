@@ -1,4 +1,4 @@
-﻿using DeviceSimulator.Core;
+﻿using MessagePublisher.Core;
 using MvvmCross.Platforms.Uap.Views;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace DeviceSimulator.Views.ServiceBus
+namespace MessagePublisher.Views.ServiceBus
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

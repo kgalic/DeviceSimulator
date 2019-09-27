@@ -1,6 +1,6 @@
-﻿<local:DeviceSimulatorApp x:Class="DeviceSimulator.App"
-    xmlns:local="using:DeviceSimulator"
+﻿<local:MessagePublisherApp x:Class="MessagePublisher.App"
+    xmlns:local="using:MessagePublisher"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     RequestedTheme="Light">
-</local:DeviceSimulatorApp>
+</local:MessagePublisherApp>

@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace DeviceSimulator
+namespace MessagePublisher
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -38,7 +38,7 @@ namespace DeviceSimulator
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.FullScreen;
         }
     }
-    public abstract class DeviceSimulatorApp : MvxApplication<Setup, Core.App>
+    public abstract class MessagePublisherApp : MvxApplication<Setup, Core.App>
     {
     }
 }

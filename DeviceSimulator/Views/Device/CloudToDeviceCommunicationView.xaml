@@ -1,7 +1,7 @@
 ﻿<views:MvxWindowsPage
     xmlns:views="using:MvvmCross.Platforms.Uap.Views" 
-    xmlns:local="using:DeviceSimulator.Converters"
-    x:Class="DeviceSimulator.Views.CloudToDeviceCommunicationView"
+    xmlns:local="using:MessagePublisher.Converters"
+    x:Class="MessagePublisher.Views.CloudToDeviceCommunicationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

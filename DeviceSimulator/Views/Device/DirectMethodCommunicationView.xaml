@@ -1,8 +1,8 @@
 ﻿<views:MvxWindowsPage
     x:Name="DirectMethodPage"
     xmlns:views="using:MvvmCross.Platforms.Uap.Views" 
-    xmlns:local="using:DeviceSimulator.Controls"
-    x:Class="DeviceSimulator.Views.DirectMethodCommunicationView"
+    xmlns:local="using:MessagePublisher.Controls"
+    x:Class="MessagePublisher.Views.DirectMethodCommunicationView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

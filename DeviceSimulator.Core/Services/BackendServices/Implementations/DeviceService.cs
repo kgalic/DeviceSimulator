@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class DeviceService : IDeviceService
     {

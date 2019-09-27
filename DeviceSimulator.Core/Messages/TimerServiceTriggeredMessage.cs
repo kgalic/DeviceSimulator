@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class TimerServiceTriggeredMessage<T> : MvxMessage where T : BasePublisherViewModel
     {

@@ -6,7 +6,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core.ViewModels
+namespace MessagePublisher.Core.ViewModels
 {
     public class HomeViewModel : BasePublisherViewModel
     {

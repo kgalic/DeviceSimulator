@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public abstract class BaseSetting
     {

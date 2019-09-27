@@ -4,7 +4,7 @@ using MvvmCross.Plugin.Messenger;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class EventGridViewModel : BasePublisherViewModel
     {

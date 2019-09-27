@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeviceSimulator.Core.Messages
+namespace MessagePublisher.Core.Messages
 {
     public class DirectMethodStatusUpdatedMessage : MvxMessage
     {

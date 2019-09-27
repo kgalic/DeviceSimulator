@@ -17,14 +17,14 @@ using Windows.UI.Xaml;
 using System.Linq;
 using MvvmCross.Platforms.Uap.Presenters;
 using MvvmCross;
-using DeviceSimulator.Core;
-using DeviceSimulator.Views;
-using DeviceSimulator.Core.ViewModels;
+using MessagePublisher.Core;
+using MessagePublisher.Views;
+using MessagePublisher.Core.ViewModels;
 using System.Collections;
 using System.Collections.Generic;
 using Windows.UI.Xaml.Navigation;
 
-namespace DeviceSimulator
+namespace MessagePublisher
 {
     public class MvxWindowsViewPresenter
         : MvxAttributeViewPresenter, IMvxWindowsViewPresenter

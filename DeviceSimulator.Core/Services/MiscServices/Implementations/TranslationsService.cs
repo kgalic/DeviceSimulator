@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class TranslationsService : ITranslationsService
     {

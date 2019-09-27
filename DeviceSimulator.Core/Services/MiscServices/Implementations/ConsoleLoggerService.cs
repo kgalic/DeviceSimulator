@@ -1,10 +1,10 @@
-﻿using DeviceSimulator.Core.Messages;
+﻿using MessagePublisher.Core.Messages;
 using MvvmCross.Plugin.Messenger;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class ConsoleLoggerService : IConsoleLoggerService
     {

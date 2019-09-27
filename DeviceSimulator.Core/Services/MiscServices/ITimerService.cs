@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public interface ITimerService<T> where T : BasePublisherViewModel
     {

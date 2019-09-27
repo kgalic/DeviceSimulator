@@ -1,4 +1,4 @@
-﻿using DeviceSimulator.Core.Messages;
+﻿using MessagePublisher.Core.Messages;
 using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class DirectMethodCommunicationViewModel : MvxViewModel
     {

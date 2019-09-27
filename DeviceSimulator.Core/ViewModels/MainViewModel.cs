@@ -1,4 +1,4 @@
-﻿using DeviceSimulator.Core.ViewModels;
+﻿using MessagePublisher.Core.ViewModels;
 using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeviceSimulator.Core
+namespace MessagePublisher.Core
 {
     public class MainViewModel : MvxViewModel
     {
