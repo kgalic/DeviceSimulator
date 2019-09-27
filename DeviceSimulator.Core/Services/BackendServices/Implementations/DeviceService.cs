@@ -25,7 +25,7 @@ namespace MessagePublisher.Core
         private DeviceClient _deviceClient;
         private bool _isConnected;
 
-        CancellationTokenSource _source = new CancellationTokenSource();
+        CancellationTokenSource _source;
         CancellationToken _cancellationToken;
 
         private IDictionary<string, MethodCallback> _directMethodDictionary;
@@ -43,8 +43,6 @@ namespace MessagePublisher.Core
             _messageService = messageService;
             _consoleLoggerService = consoleLoggerService;
             _translationsService = translationsService;
-
-            _cancellationToken = _source.Token;
         }
 
         #endregion
@@ -53,7 +51,9 @@ namespace MessagePublisher.Core
 
         public async Task Connect(string connectionString)
         {
-            _deviceClient = DeviceClient.CreateFromConnectionString(connectionString);
+            _source = new CancellationTokenSource();
+            _cancellationToken = _source.Token;
+            _deviceClient = DeviceClient.CreateFromConnectionString(connectionString, TransportType.Mqtt);
             await InitializeDevice();
             ReceiveCloudMessages(_cancellationToken);
             SendDeviceConnectionUpdatedMessage();

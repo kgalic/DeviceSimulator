@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="a3bf00d8-d9dd-40d5-8cb3-419d5d11a288" Publisher="CN=v-krgali" Version="1.0.0.0" />
+  <Identity Name="a3bf00d8-d9dd-40d5-8cb3-419d5d11a288" Publisher="CN=Variant Logic, O=Variant Logic, C=DE" Version="0.9.5.0" />
   <mp:PhoneIdentity PhoneProductId="a3bf00d8-d9dd-40d5-8cb3-419d5d11a288" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>MessagePublisher</DisplayName>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="MessagePublisher.App">
-      <uap:VisualElements DisplayName="MessagePublisher" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="MessagePublisher" BackgroundColor="transparent">
+      <uap:VisualElements DisplayName="Message Publisher" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Message Publisher Simulator is an application that helps in simulating a single device communication with IoT Hub, or any other message publisher that sends messages/events to Azure EventGrid and/or Azure  ServiceBusb. It is possible to define JSON payload, and trigger message sending. Message sending can be also time triggered." BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using MessagePublisher.Core;
+using MvvmCross;
 using MvvmCross.Platforms.Uap.Views;
 using MvvmCross.ViewModels;
 using System;
@@ -34,10 +35,11 @@ namespace MessagePublisher.Views
         {
             // if cache mode is 'Required' then View Model 
             // should be retrieved instead of creating a new one
-            var cachedViewModel = ViewModel;
+            var cachedViewModel = ViewModel as DirectMethodCommunicationViewModel;
             base.OnNavigatedTo(e);
             if (cachedViewModel != null)
             {
+                cachedViewModel.Initialize(); //forcing 
                 ViewModel = cachedViewModel;
             }
         }

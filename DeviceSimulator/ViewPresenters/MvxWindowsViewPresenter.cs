@@ -250,7 +250,7 @@ namespace MessagePublisher
 
                 return false;
             }
-            catch (Exception exception)
+            catch
             {
                 return false;
             }

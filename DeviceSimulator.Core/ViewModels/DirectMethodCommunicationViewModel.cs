@@ -60,7 +60,15 @@ namespace MessagePublisher.Core
 
         #region Public
 
-        public ObservableCollection<DirectMethodSettingViewItem> ViewItems => _directMethodSettingViewItems;
+        public ObservableCollection<DirectMethodSettingViewItem> ViewItems
+        {
+            get => _directMethodSettingViewItems;
+            set
+            {
+                _directMethodSettingViewItems = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public string DirectMethodEntry
         {
