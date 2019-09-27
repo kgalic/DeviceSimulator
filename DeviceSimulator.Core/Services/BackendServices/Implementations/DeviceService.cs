@@ -53,23 +53,9 @@ namespace DeviceSimulator.Core
 
         public async Task Connect(string connectionString)
         {
-            try
-            {
-                _deviceClient = DeviceClient.CreateFromConnectionString(connectionString);
-                await InitializeDevice();
-                ReceiveCloudMessages(_cancellationToken);
-            }
-            catch (Exception e)
-            {
-                var exceptionMessage = string.Format(_translationsService.GetString("IoTHubNotReachableMessageException"),
-                                                        Environment.NewLine,
-                                                        e.Message);
-
-                _consoleLoggerService.Log(value: exceptionMessage,
-                                          logType:ConsoleLogTypes.D2CCommunication);
-
-                _isConnected = false;
-            }
+            _deviceClient = DeviceClient.CreateFromConnectionString(connectionString);
+            await InitializeDevice();
+            ReceiveCloudMessages(_cancellationToken);
             SendDeviceConnectionUpdatedMessage();
         }
 

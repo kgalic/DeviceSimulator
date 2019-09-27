@@ -176,20 +176,28 @@ namespace DeviceSimulator.Core
             {
                 return new MvxCommand(async () =>
                 {
-                    if (EventGridServiceInstance.IsConnected)
+                    try
                     {
-                        await EventGridServiceInstance.Disconnect().ConfigureAwait(false); ;
+                        if (EventGridServiceInstance.IsConnected)
+                        {
+                            await EventGridServiceInstance.Disconnect().ConfigureAwait(false); ;
+                        }
+                        else
+                        {
+                            await EventGridServiceInstance.Connect(endpoint: Endpoint,
+                                                           key: Key,
+                                                           topic: TopicName,
+                                                           subject: Subject,
+                                                           eventType: EventType,
+                                                           dataVersion: DataVersion).ConfigureAwait(false);
+                        }
+                        SetConnectionStatus();
                     }
-                    else
+                    catch
                     {
-                        await EventGridServiceInstance.Connect(endpoint: Endpoint,
-                                                       key: Key,
-                                                       topic: TopicName,
-                                                       subject: Subject,
-                                                       eventType: EventType,
-                                                       dataVersion: DataVersion).ConfigureAwait(false);
+                        _consoleLoggerService.Log(value: _translationsService.GetString("ParametersNotValid"),
+                                                  logType: ConsoleLogTypes.EventGrid);
                     }
-                    SetConnectionStatus();
                 });
             }
         }

@@ -103,15 +103,27 @@ namespace DeviceSimulator.Core.ViewModels
             {
                 return new MvxCommand(async () =>
                 {
-                    if (DeviceService.IsConnected)
+                    try
                     {
-                        await DeviceService.Disconnect().ConfigureAwait(false); ;
+                        if (DeviceService.IsConnected)
+                        {
+                            await DeviceService.Disconnect().ConfigureAwait(false); ;
+                        }
+                        else
+                        {
+                            await DeviceService.Connect(ConnectionString).ConfigureAwait(false);
+                        }
+                        SetDeviceConnectionStatusForStatus();
                     }
-                    else
+                    catch (Exception e)
                     {
-                        await DeviceService.Connect(ConnectionString).ConfigureAwait(false);
+                        var exceptionMessage = string.Format(_translationsService.GetString("IoTHubNotReachableMessageException"),
+                                                                Environment.NewLine,
+                                                                e.Message);
+
+                        _consoleLoggerService.Log(value: exceptionMessage,
+                                                  logType: ConsoleLogTypes.D2CCommunication);
                     }
-                    SetDeviceConnectionStatusForStatus();
                 });
             }
         }

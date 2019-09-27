@@ -3,6 +3,7 @@ using Microsoft.Azure.EventGrid.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,9 +62,7 @@ namespace DeviceSimulator.Core
              || string.IsNullOrEmpty(eventType)
              || string.IsNullOrEmpty(dataVersion))
             {
-                _consoleLoggerService.Log(value: _translationsService.GetString("ParametersNotValid"),
-                                          logType: ConsoleLogTypes.EventGrid);
-                return Task.FromResult(true);
+                throw new InvalidDataException();
             }
 
             _endpoint = endpoint;
