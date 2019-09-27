@@ -38,7 +38,7 @@ It is possible to use the expression for generating random value(double or int).
 If min or max value contains a comma, the randomly generated value will be double, otherwise int.
 
 ## Technical overview
-Message Publisher Simulator is UWP(min version 1803, build 17134) application based on MVVMCross 6.x. The intention with cross-platform development is to offer simulator for MAC OS, iOS and Android in the near future.
+Message Publisher Simulator is UWP(min version 1809, build 17763) application based on MVVMCross 6.x. The intention with cross-platform development is to offer simulator for MAC OS, iOS and Android in the near future.
 
 ## Next Steps
 * MAC OS version of the application
