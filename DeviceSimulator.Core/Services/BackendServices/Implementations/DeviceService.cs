@@ -174,9 +174,17 @@ namespace MessagePublisher.Core
 
         private async Task ReceiveCloudMessages(CancellationToken cancellationToken)
         {
-            while(!cancellationToken.IsCancellationRequested)
+            while(true)
             {
                 var cloudToDeviceMessage = await _deviceClient.ReceiveAsync(_cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+                if (cloudToDeviceMessage == null)
+                {
+                    continue;
+                }
                 if (cloudToDeviceMessage.BodyStream != null)
                 {
                     var streamReader = new StreamReader(cloudToDeviceMessage.BodyStream);
@@ -185,6 +193,8 @@ namespace MessagePublisher.Core
                     _consoleLoggerService.Log(value: message,
                                               logType: ConsoleLogTypes.C2DCommunication);
                 }
+
+                await _deviceClient.CompleteAsync(cloudToDeviceMessage);
             }
         }
 

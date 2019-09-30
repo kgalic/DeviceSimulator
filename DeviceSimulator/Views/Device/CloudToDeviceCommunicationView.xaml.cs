@@ -35,10 +35,9 @@ namespace MessagePublisher.Views
             // if cache mode is 'Required' then View Model 
             // should be retrieved instead of creating a new one
             var cachedViewModel = ViewModel;
-            base.OnNavigatedTo(e);
-            if (cachedViewModel != null)
+            if (cachedViewModel == null)
             {
-                ViewModel = cachedViewModel;
+                base.OnNavigatedTo(e);
             }
         }
 

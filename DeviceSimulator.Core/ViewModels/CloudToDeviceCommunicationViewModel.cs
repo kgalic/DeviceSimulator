@@ -10,7 +10,7 @@ namespace MessagePublisher.Core
     {
         #region Fields
 
-        private MvxSubscriptionToken _deviceStatusChangedMessageToken;
+        private MvxSubscriptionToken _outputChangedMessageToken;
 
         private string _messageOutput = string.Empty;
 
@@ -20,7 +20,7 @@ namespace MessagePublisher.Core
 
         public CloudToDeviceCommunicationViewModel(IMvxMessenger messageService)
         {
-            messageService.Subscribe<CloudMessageReceivedMessage>(HandleCloudToDeviceMessage);
+            _outputChangedMessageToken = messageService.Subscribe<CloudMessageReceivedMessage>(HandleCloudToDeviceMessage);
         }
 
         #endregion

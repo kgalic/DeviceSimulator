@@ -34,16 +34,9 @@ namespace MessagePublisher.Views.ServiceBus
             // if cache mode is 'Required' then View Model 
             // should be retrieved instead of creating a new one
             var cachedViewModel = ViewModel as ServiceBusViewModel;
-            var selectedIndex = 0;
-            if (cachedViewModel != null)
+            if (cachedViewModel == null)
             {
-                selectedIndex = cachedViewModel.ServiceBusEntityOptionsSelectedIndexId;
-            }
-            base.OnNavigatedTo(e);
-            if (cachedViewModel != null)
-            {
-                cachedViewModel.ServiceBusEntityOptionsSelectedIndexId = selectedIndex;
-                ViewModel = cachedViewModel;
+                base.OnNavigatedTo(e);
             }
         }
 

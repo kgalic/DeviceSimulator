@@ -1,4 +1,5 @@
-﻿using MvvmCross.Platforms.Uap.Views;
+﻿using MessagePublisher.Core;
+using MvvmCross.Platforms.Uap.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,11 +33,10 @@ namespace MessagePublisher.Views.EventGrid
         {
             // if cache mode is 'Required' then View Model 
             // should be retrieved instead of creating a new one
-            var cachedViewModel = ViewModel;
-            base.OnNavigatedTo(e);
-            if (cachedViewModel != null)
+            var cachedViewModel = ViewModel as EventGridViewModel;
+            if (cachedViewModel == null)
             {
-                ViewModel = cachedViewModel;
+                base.OnNavigatedTo(e);
             }
         }
 

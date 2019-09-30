@@ -23,6 +23,7 @@ namespace MessagePublisher.Core
 
         private ObservableCollection<DirectMethodSettingViewItem> _directMethodSettingViewItems;
 
+        private MvxSubscriptionToken _deviceConnectionStatusChangedMessageToken;
         private MvxSubscriptionToken _directMethodStatusChangedMessageToken;
 
         private string _directMethodEntry;
@@ -42,6 +43,7 @@ namespace MessagePublisher.Core
             _deviceSettingDataService = deviceSettingDataService;
 
             _directMethodStatusChangedMessageToken = messageService.Subscribe<DirectMethodStatusUpdatedMessage>(HandleDirectMethodStatusChanged);
+            _deviceConnectionStatusChangedMessageToken = messageService.Subscribe<DeviceConnectionChangedMessage>(HandleDeviceConnectionStatus);
         }
 
         public override Task Initialize()
@@ -184,14 +186,33 @@ namespace MessagePublisher.Core
                     await _deviceService.UnregisterDirectMethodAsync(directMethodViewItem.DirectMethodSetting.DirectMethodName);
                 }
             });
-            var removeCommand = new MvxCommand<DirectMethodSettingViewItem>((item) =>
+            var removeCommand = new MvxCommand<DirectMethodSettingViewItem>(async (item) =>
             {
+                await _deviceService.UnregisterDirectMethodAsync(item.DirectMethodSetting.DirectMethodName);
                 _directMethodSettingViewItems.Remove(item);
             });
             directMethodViewItem.RemoveCommand = removeCommand;
             directMethodViewItem.RegisterCommand = registerCommand;
 
             return directMethodViewItem;
+        }
+
+        private void HandleDeviceConnectionStatus(DeviceConnectionChangedMessage message)
+        {
+            if (message.IsConnected)
+            {
+                Status = string.Empty;
+            }
+            else
+            {
+                foreach(var viewItem in ViewItems)
+                {
+                    if (!viewItem.IsEnabled)
+                    {
+                        viewItem.RegisterCommand.Execute();
+                    }
+                }
+            }
         }
 
         #endregion
