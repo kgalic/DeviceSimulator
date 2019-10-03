@@ -1,6 +1,6 @@
 # Message Publisher
 
-Message Publisher Simulator is an application that helps in simulating a single device communication with IoT Hub, or any other message publisher that sends messages/events to Azure EventGrid and/or Azure  ServiceBusb. It is possible to define JSON payload, and trigger message sending. Message sending can be also time triggered.
+Message Publisher Simulator is an application that helps in simulating a single device communication with IoT Hub, or any other message publisher that sends messages/events to Azure EventGrid and/or Azure  ServiceBus. It is possible to define JSON payload, and trigger message sending. Message sending can be also time triggered.
 
 # IoT Hub Device Simulator
 
