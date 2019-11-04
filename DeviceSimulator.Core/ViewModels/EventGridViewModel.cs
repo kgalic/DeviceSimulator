@@ -208,7 +208,15 @@ namespace MessagePublisher.Core
             {
                 return new MvxCommand(async () =>
                 {
-                    await _filePickerService.SaveDeviceSettingFromDiskAsync(_eventGridSetting);
+                    try
+                    {
+                        await _filePickerService.SaveDeviceSettingFromDiskAsync(_eventGridSetting);
+                    }
+                    catch
+                    {
+                        _consoleLoggerService.Log(value: _translationsService.GetString("SaveFileException"),
+                                                  logType: ConsoleLogType);
+                    }
                 });
             }
         }

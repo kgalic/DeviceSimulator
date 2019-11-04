@@ -22,7 +22,8 @@ namespace MessagePublisher.Core
             ("direct_method", typeof(DirectMethodCommunicationViewModel)),
             ("c2d_messages", typeof(CloudToDeviceCommunicationViewModel)),
             ("event_grid", typeof(EventGridViewModel)),
-            ("service_bus", typeof(ServiceBusViewModel))
+            ("service_bus", typeof(ServiceBusViewModel)),
+            ("event_hub", typeof(EventHubViewModel))
         };
 
         private readonly IDeviceService _deviceService;
@@ -84,6 +85,10 @@ namespace MessagePublisher.Core
                 else if (type == typeof(ServiceBusViewModel))
                 {
                     Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<ServiceBusViewModel>();
+                }
+                else if (type == typeof(EventHubViewModel))
+                {
+                    Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<EventHubViewModel>();
                 }
             });
         }

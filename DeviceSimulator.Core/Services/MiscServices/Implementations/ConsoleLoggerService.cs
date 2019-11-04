@@ -44,6 +44,9 @@ namespace MessagePublisher.Core
                 case ConsoleLogTypes.ServiceBus:
                     _messageService.Publish(new ServiceBusStatusUpdatedMessage(this, value));
                     break;
+                case ConsoleLogTypes.EventHub:
+                    _messageService.Publish(new EventHubStatusUpdatedMessage(this, value));
+                    break;
                 default:
                     Console.WriteLine(value);
                     break;

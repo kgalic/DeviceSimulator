@@ -31,6 +31,7 @@ namespace MessagePublisher.Core
         {
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceService, DeviceService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IEventGridService, EventGridService>();
+            Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IEventHubService, EventHubService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IMessageExpressionService, MessageExpressionService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<ITranslationsService, TranslationsService>();
             Mvx.IoCProvider.LazyConstructAndRegisterSingleton<IDeviceSettingDataService, DeviceSettingDataService>();
@@ -39,6 +40,7 @@ namespace MessagePublisher.Core
             Mvx.IoCProvider.RegisterType<ITimerService<EventGridViewModel>, TimerService<EventGridViewModel>>();
             Mvx.IoCProvider.RegisterType<ITimerService<HomeViewModel>, TimerService<HomeViewModel>>();
             Mvx.IoCProvider.RegisterType<ITimerService<ServiceBusViewModel>, TimerService<ServiceBusViewModel>>();
+            Mvx.IoCProvider.RegisterType<ITimerService<EventHubViewModel>, TimerService<EventHubViewModel>>();
             Mvx.IoCProvider.RegisterType<IConsoleLoggerService, ConsoleLoggerService>();
         }
     }

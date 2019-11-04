@@ -1,70 +1,54 @@
-﻿using MvvmCross;
+﻿using System;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using Newtonsoft.Json;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace MessagePublisher.Core.ViewModels
+namespace MessagePublisher.Core
 {
-    public class HomeViewModel : BasePublisherViewModel
+    public class EventHubViewModel : BasePublisherViewModel
     {
         #region Fields
 
         protected readonly IDeviceSettingDataService _deviceSettingDataService;
-        protected readonly ITimerService<HomeViewModel> _timerService;
+        protected readonly ITimerService<EventHubViewModel> _timerService;
 
-        private MvxSubscriptionToken _deviceStatusChangedMessageToken;
+        private MvxSubscriptionToken _statusChangedMessageToken;
 
-        private DeviceSetting _deviceSetting;
+        private EventHubSetting _eventHubSetting;
 
         #endregion
 
         #region Constructors & Lifecycle
-         
-        public HomeViewModel(IDeviceService deviceService) 
-        {
-            _publisherService = deviceService;
-            _deviceSettingDataService = Mvx.IoCProvider.Resolve<IDeviceSettingDataService>();
-            _timerService = Mvx.IoCProvider.Resolve<ITimerService<HomeViewModel>>();
 
-            if (_deviceSettingDataService.DeviceSetting != null)
-            {
-                _deviceSetting = _deviceSettingDataService.DeviceSetting;
-            }
-            else
-            {
-                _deviceSetting = new DeviceSetting();
-                _deviceSettingDataService.DeviceSetting = _deviceSetting;
-            }
+        public EventHubViewModel(IEventHubService eventHubService)
+        {
+            _publisherService = eventHubService;
+            _deviceSettingDataService = Mvx.IoCProvider.Resolve<IDeviceSettingDataService>();
+            _timerService = Mvx.IoCProvider.Resolve<ITimerService<EventHubViewModel>>();
+
+            _eventHubSetting = new EventHubSetting();
+
             SetConnectionStatus();
 
-            ConsoleLogType = ConsoleLogTypes.D2CCommunication;
+            ConsoleLogType = ConsoleLogTypes.EventHub;
 
-            _deviceStatusChangedMessageToken = _messageService.Subscribe<DeviceStatusUpdatedMessage>(HandleDeviceStatus);
-            _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<HomeViewModel>>(HandleTimerTrigger);
-        }
-
-        public override void ViewDisappearing()
-        {
-            base.ViewDisappearing();
-            _deviceSettingDataService.DeviceSetting = _deviceSetting;
+            _statusChangedMessageToken = _messageService.Subscribe<EventHubStatusUpdatedMessage>(HandleStatusChangedMessage);
         }
 
         #endregion
 
         #region Public
-
+        
         public string ConnectionString
         {
             get
             {
-                return _deviceSetting.ConnectionString;
+                return _eventHubSetting.ConnectionString;
             }
             set
             {
-                _deviceSetting.ConnectionString = value;
+                _eventHubSetting.ConnectionString = value;
                 RaisePropertyChanged(() => ConnectionString);
             }
         }
@@ -73,25 +57,15 @@ namespace MessagePublisher.Core.ViewModels
         {
             get
             {
-                return _deviceSetting.Message;
+                return _eventHubSetting.Message;
             }
             set
             {
-                _deviceSetting.Message = value;
+                _eventHubSetting.Message = value;
                 RaisePropertyChanged(() => MessagePayload);
             }
         }
-
         public override bool IsRunning => _timerService.IsRunning;
-
-        #endregion
-
-        #region Translations
-
-        public string IoTHubConnectionStringPlaceholder
-        {
-            get => _translationsService.GetString("IoTHubConnectionString");
-        }
 
         #endregion
 
@@ -105,24 +79,24 @@ namespace MessagePublisher.Core.ViewModels
                 {
                     try
                     {
-                        if (DeviceService.IsConnected)
+                        if (EventHubService.IsConnected)
                         {
-                            await DeviceService.Disconnect().ConfigureAwait(false); ;
+                            await EventHubService.Disconnect().ConfigureAwait(false); ;
                         }
                         else
                         {
-                            await DeviceService.Connect(ConnectionString).ConfigureAwait(false);
+                            await EventHubService.Connect(ConnectionString).ConfigureAwait(false);
                         }
                         SetConnectionStatus();
                     }
                     catch (Exception e)
                     {
-                        var exceptionMessage = string.Format(_translationsService.GetString("IoTHubNotReachableMessageException"),
+                        var exceptionMessage = string.Format(_translationsService.GetString("EventHubNotReachableMessageException"),
                                                                 Environment.NewLine,
                                                                 e.Message);
 
                         _consoleLoggerService.Log(value: exceptionMessage,
-                                                  logType: ConsoleLogTypes.D2CCommunication);
+                                                  logType: ConsoleLogTypes.EventHub);
                     }
                 });
             }
@@ -136,11 +110,11 @@ namespace MessagePublisher.Core.ViewModels
                 {
                     try
                     {
-                        await _filePickerService.SaveDeviceSettingFromDiskAsync(_deviceSetting);
+                        await _filePickerService.SaveDeviceSettingFromDiskAsync(_eventHubSetting);
                     }
                     catch
                     {
-                        _consoleLoggerService.Log(value: _translationsService.GetString("SaveFileException"),
+                        _consoleLoggerService.Log(value: _translationsService.GetString("SaveFileException"), 
                                                   logType: ConsoleLogType);
                     }
                 });
@@ -156,14 +130,13 @@ namespace MessagePublisher.Core.ViewModels
                     try
                     {
                         var deviceSettingsString = await _filePickerService.LoadSettingsFromDiskAsync();
-                        var deviceSettings = JsonConvert.DeserializeObject<DeviceSetting>(deviceSettingsString);
+                        var deviceSettings = JsonConvert.DeserializeObject<EventHubSetting>(deviceSettingsString);
                         if (deviceSettings != null)
                         {
                             await ResetAll();
-                            _deviceSetting = deviceSettings;
-                            MessagePayload = _deviceSetting.Message;
-                            ConnectionString = _deviceSetting.ConnectionString;
-                            _deviceSettingDataService.DeviceSetting = _deviceSetting;
+                            _eventHubSetting = deviceSettings;
+                            MessagePayload = _eventHubSetting.Message;
+                            ConnectionString = _eventHubSetting.ConnectionString;
                         }
                     }
                     catch
@@ -178,33 +151,41 @@ namespace MessagePublisher.Core.ViewModels
 
         #endregion
 
-        #region Private
+        #region Translations
 
-        private IDeviceService DeviceService => _publisherService as IDeviceService;
+        public string ConnectionStringPlaceholder
+        {
+            get => _translationsService.GetString("EventHubConnectionString");
+        }
 
         #endregion
 
-        #region ProtectedMethods
+        #region Private
+
+        private IEventHubService EventHubService => _publisherService as IEventHubService;
+
+        #endregion
+
+        #region Protected Methods
 
         protected override void StartTimer()
         {
             _isTimerOn = true;
-            _messageService.Publish(new StartTimerServiceMessage<HomeViewModel>(this, DelayInMiliseconds));
+            _messageService.Publish(new StartTimerServiceMessage<EventHubViewModel>(this, DelayInMiliseconds));
             TimerStatusTitle = _translationsService.GetString("StopTimer");
         }
 
         protected override void StopTimer()
         {
             _isTimerOn = false;
-            _messageService.Publish(new StopTimerServiceMessage<HomeViewModel>(this));
+            _messageService.Publish(new StopTimerServiceMessage<EventHubViewModel>(this));
             TimerStatusTitle = _translationsService.GetString("StartTimer");
         }
 
         #endregion
-
         #region Private Methods
 
-        private void HandleDeviceStatus(DeviceStatusUpdatedMessage message)
+        private void HandleStatusChangedMessage(EventHubStatusUpdatedMessage message)
         {
             if (!string.IsNullOrEmpty(message.Status))
             {
@@ -212,12 +193,6 @@ namespace MessagePublisher.Core.ViewModels
             }
         }
 
-        protected void HandleTimerTrigger(TimerServiceTriggeredMessage<HomeViewModel> message)
-        {
-            SendMessagePayload();
-        }
-
         #endregion
     }
 }
-

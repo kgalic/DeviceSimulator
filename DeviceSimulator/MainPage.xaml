@@ -60,6 +60,14 @@
                                               FontSize="12"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Content="Event Hub" 
+                                    Tag="event_hub">
+                    <NavigationViewItem.Icon>
+                        <FontIcon FontFamily="Segoe MDL2 Assets" 
+                                              Glyph="&#xEA56;"
+                                              FontSize="12"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
             <NavigationView.Content>
                 <Frame x:Name="ContentFrame">

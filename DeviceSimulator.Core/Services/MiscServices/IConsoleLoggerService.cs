@@ -15,6 +15,7 @@ namespace MessagePublisher.Core
         DirectMethodCommunication,
         C2DCommunication,
         EventGrid,
-        ServiceBus
+        ServiceBus,
+        EventHub
     }
 }
