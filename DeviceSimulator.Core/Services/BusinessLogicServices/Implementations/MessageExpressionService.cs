@@ -9,6 +9,7 @@ namespace MessagePublisher.Core
     public class MessageExpressionService : IMessageExpressionService
     {
         private const string RandomKeyWord = "rnd";
+        private const string DateTimeKeyWord = "datetime:current";
         private const char Splitter = ':';
         private const string Comma = ".";
 
@@ -40,6 +41,11 @@ namespace MessagePublisher.Core
                         var randomValue = random.Next(minimum, maximum);
                         property.Value = randomValue;
                     }
+                }
+                else if (value.Contains(DateTimeKeyWord))
+                {
+                    var dateValue = DateTime.Now.ToString("u").Replace(' ', 'T');
+                    property.Value = dateValue;
                 }
             }
 
