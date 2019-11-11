@@ -207,6 +207,8 @@
     </Compile>
     <Compile Include="TouchViewPresenter.cs" />
     <Compile Include="Setup.cs" />
+    <Compile Include="Services\FilePickerService.cs" />
+    <Compile Include="ViewInterfaces\ITabView.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainMenu.xib" />
@@ -223,6 +225,8 @@
     <Folder Include="Views\" />
     <Folder Include="Views\MainView\" />
     <Folder Include="Views\HomeView\" />
+    <Folder Include="Services\" />
+    <Folder Include="ViewInterfaces\" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="..\DeviceSimulator.Core\Translations\Strings.xml">

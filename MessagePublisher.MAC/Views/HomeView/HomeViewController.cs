@@ -7,7 +7,7 @@ using MvvmCross.Platforms.Mac.Views;
 
 namespace MessagePublisher.MAC.Views.HomeView
 {
-    public partial class HomeViewController : MvxViewController
+    public partial class HomeViewController : MvxViewController, ITabView
     {
         #region Constructors
 
