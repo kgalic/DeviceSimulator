@@ -188,14 +188,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
-    <Compile Include="MainWindow.cs" />
-    <Compile Include="MainWindow.designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MainWindowController.cs" />
-    <Compile Include="MainWindowController.designer.cs">
-      <DependentUpon>MainWindowController.cs</DependentUpon>
-    </Compile>
     <Compile Include="AppDelegate.cs" />
     <Compile Include="Views\MainView\MainView.cs" />
     <Compile Include="Views\MainView\MainViewController.cs" />
@@ -213,10 +205,11 @@
     <Compile Include="Views\HomeView\HomeViewController.designer.cs">
       <DependentUpon>HomeViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="TouchViewPresenter.cs" />
+    <Compile Include="Setup.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainMenu.xib" />
-    <InterfaceDefinition Include="MainWindow.xib" />
     <InterfaceDefinition Include="Views\MainView\MainView.xib" />
     <InterfaceDefinition Include="Views\HomeView\HomeView.xib" />
   </ItemGroup>

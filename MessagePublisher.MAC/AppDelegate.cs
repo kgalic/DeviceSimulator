@@ -5,11 +5,9 @@ using MvvmCross.Platforms.Mac.Core;
 namespace MessagePublisher.MAC
 {
     [Register("AppDelegate")]
-    public class AppDelegate : MvxApplicationDelegate<MvxMacSetup<Core.App>, Core.App>
+    public class AppDelegate : MvxApplicationDelegate<Setup, Core.App>
     {
-        MainWindowController mainWindowController;
-
-        public AppDelegate()
+        public AppDelegate() 
         {
         }
 
