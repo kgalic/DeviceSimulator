@@ -50,12 +50,19 @@
   <string name="EventHubConnected">Event Hub Connected</string>
   <string name="EventHubConnectionString">Event Hub Connection String</string>
   <string name="EventHubMessageSent">Message has been sent to Event Hub{0}{1}{2}</string>
+  
+  <!-- Mqtt Publisher View-->
+  <string name="MqttPublisherConnected">Mqtt Publisher Connected</string>
+  <string name="MqttPublisherHostName">Host name</string>
+  <string name="MqttPublisherTopic">Topic</string>
+  <string name="MqttPublisherMessageSent">Message has been sent to the topic {0}{1}{2}</string>
 
   <!-- Exception Messages -->
   <string name="SendingMessageException">Exception occured while sending Message!</string>
   <string name="ParametersNotValid">Provided parameters are not valid!</string>
   <string name="IoTHubNotReachableMessageException">IoT hub cannot be reached{0}{1}</string>
   <string name="EventHubNotReachableMessageException">Event hub cannot be reached{0}{1}</string>
+  <string name="MqttNotReachable">Mqtt broker cannot be reached{0}{1}</string>
   <string name="ErrorLoadingFileMessageException">Loading file not succeed</string>
   <string name="SaveFileException">Saving file failed. Please try with another location.</string>
 

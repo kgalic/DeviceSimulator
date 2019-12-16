@@ -47,6 +47,9 @@ namespace MessagePublisher.Core
                 case ConsoleLogTypes.EventHub:
                     _messageService.Publish(new EventHubStatusUpdatedMessage(this, value));
                     break;
+                case ConsoleLogTypes.MqttPublisher:
+                    _messageService.Publish(new MqttPublisherStatusUpdatedMessage(this, value));
+                    break;
                 default:
                     Console.WriteLine(value);
                     break;

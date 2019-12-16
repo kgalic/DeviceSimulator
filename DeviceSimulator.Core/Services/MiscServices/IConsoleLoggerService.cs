@@ -16,6 +16,7 @@ namespace MessagePublisher.Core
         C2DCommunication,
         EventGrid,
         ServiceBus,
-        EventHub
+        EventHub,
+        MqttPublisher
     }
 }

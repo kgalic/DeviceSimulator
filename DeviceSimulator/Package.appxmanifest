@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="a3bf00d8-d9dd-40d5-8cb3-419d5d11a288" Publisher="CN=Variant Logic, O=Variant Logic, C=DE" Version="0.9.5.0" />
+  <Identity Name="a3bf00d8-d9dd-40d5-8cb3-419d5d11a288" Publisher="CN=Kresimir" Version="0.9.5.0" />
   <mp:PhoneIdentity PhoneProductId="a3bf00d8-d9dd-40d5-8cb3-419d5d11a288" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>MessagePublisher</DisplayName>

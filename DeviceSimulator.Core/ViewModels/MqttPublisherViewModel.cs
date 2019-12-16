@@ -1,56 +1,65 @@
-﻿using System;
-using MvvmCross;
+﻿using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Plugin.Messenger;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MessagePublisher.Core
 {
-    public class EventHubViewModel : BasePublisherViewModel
+    public class MqttPublisherViewModel : BasePublisherViewModel
     {
         #region Fields
 
         protected readonly IDeviceSettingDataService _deviceSettingDataService;
-        protected readonly ITimerService<EventHubViewModel> _timerService;
+        protected readonly ITimerService<MqttPublisherViewModel> _timerService;
 
         private MvxSubscriptionToken _statusChangedMessageToken;
 
-        private EventHubSetting _eventHubSetting;
+        private MqttPublisherSetting _mqttPublisherSetting;
 
         #endregion
 
-        #region Constructors & Lifecycle
+        #region Constructors & Lifecycle 
 
-        public EventHubViewModel(IEventHubService eventHubService)
+        public MqttPublisherViewModel(IMqttPublisherService mqttPublisherService)
         {
-            _publisherService = eventHubService;
+            _publisherService = mqttPublisherService;
             _deviceSettingDataService = Mvx.IoCProvider.Resolve<IDeviceSettingDataService>();
-            _timerService = Mvx.IoCProvider.Resolve<ITimerService<EventHubViewModel>>();
+            _timerService = Mvx.IoCProvider.Resolve<ITimerService<MqttPublisherViewModel>>();
 
-            _eventHubSetting = new EventHubSetting();
+            _mqttPublisherSetting = new MqttPublisherSetting();
 
             SetConnectionStatus();
 
-            ConsoleLogType = ConsoleLogTypes.EventHub;
+            ConsoleLogType = ConsoleLogTypes.MqttPublisher;
 
-            _statusChangedMessageToken = _messageService.Subscribe<EventHubStatusUpdatedMessage>(HandleStatusChangedMessage);
-            _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<EventHubViewModel>>(HandleTimerTrigger);
+            _statusChangedMessageToken = _messageService.Subscribe<MqttPublisherStatusUpdatedMessage>(HandleStatusChangedMessage);
+            _timerServiceTriggeredMessageToken = _messageService.Subscribe<TimerServiceTriggeredMessage<MqttPublisherViewModel>>(HandleTimerTrigger);
         }
 
         #endregion
 
         #region Public
-        
-        public string ConnectionString
+
+        public string HostName
         {
-            get
-            {
-                return _eventHubSetting.ConnectionString;
-            }
+            get => _mqttPublisherSetting.HostName;
             set
             {
-                _eventHubSetting.ConnectionString = value;
-                RaisePropertyChanged(() => ConnectionString);
+                _mqttPublisherSetting.HostName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string Topic
+        {
+            get => _mqttPublisherSetting.Topic;
+            set
+            {
+                _mqttPublisherSetting.Topic = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -58,12 +67,12 @@ namespace MessagePublisher.Core
         {
             get
             {
-                return _eventHubSetting.Message;
+                return _mqttPublisherSetting.Message;
             }
             set
             {
-                _eventHubSetting.Message = value;
-                RaisePropertyChanged(() => MessagePayload);
+                _mqttPublisherSetting.Message = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -81,24 +90,24 @@ namespace MessagePublisher.Core
                 {
                     try
                     {
-                        if (EventHubService.IsConnected)
+                        if (MqttPublisherService.IsConnected)
                         {
-                            await EventHubService.Disconnect().ConfigureAwait(false); ;
+                            await MqttPublisherService.Disconnect().ConfigureAwait(false); ;
                         }
                         else
                         {
-                            await EventHubService.Connect(ConnectionString).ConfigureAwait(false);
+                            await MqttPublisherService.Connect(HostName, Topic).ConfigureAwait(false);
                         }
                         SetConnectionStatus();
                     }
                     catch (Exception e)
                     {
-                        var exceptionMessage = string.Format(_translationsService.GetString("EventHubNotReachableMessageException"),
+                        var exceptionMessage = string.Format(_translationsService.GetString("MqttNotReachable"),
                                                                 Environment.NewLine,
                                                                 e.Message);
 
                         _consoleLoggerService.Log(value: exceptionMessage,
-                                                  logType: ConsoleLogTypes.EventHub);
+                                                  logType: ConsoleLogType);
                     }
                 });
             }
@@ -112,11 +121,11 @@ namespace MessagePublisher.Core
                 {
                     try
                     {
-                        await _filePickerService.SaveDeviceSettingFromDiskAsync(_eventHubSetting);
+                        await _filePickerService.SaveDeviceSettingFromDiskAsync(_mqttPublisherSetting);
                     }
                     catch
                     {
-                        _consoleLoggerService.Log(value: _translationsService.GetString("SaveFileException"), 
+                        _consoleLoggerService.Log(value: _translationsService.GetString("SaveFileException"),
                                                   logType: ConsoleLogType);
                     }
                 });
@@ -132,13 +141,14 @@ namespace MessagePublisher.Core
                     try
                     {
                         var deviceSettingsString = await _filePickerService.LoadSettingsFromDiskAsync();
-                        var deviceSettings = JsonConvert.DeserializeObject<EventHubSetting>(deviceSettingsString);
+                        var deviceSettings = JsonConvert.DeserializeObject<MqttPublisherSetting>(deviceSettingsString);
                         if (deviceSettings != null)
                         {
                             await ResetAll();
-                            _eventHubSetting = deviceSettings;
-                            MessagePayload = _eventHubSetting.Message;
-                            ConnectionString = _eventHubSetting.ConnectionString;
+                            _mqttPublisherSetting = deviceSettings;
+                            MessagePayload = _mqttPublisherSetting.Message;
+                            Topic = _mqttPublisherSetting.Topic;
+                            HostName = _mqttPublisherSetting.HostName;
                         }
                     }
                     catch
@@ -153,42 +163,47 @@ namespace MessagePublisher.Core
 
         #endregion
 
-        #region Translations
-
-        public string ConnectionStringPlaceholder
-        {
-            get => _translationsService.GetString("EventHubConnectionString");
-        }
-
-        #endregion
-
-        #region Private
-
-        private IEventHubService EventHubService => _publisherService as IEventHubService;
-
-        #endregion
-
         #region Protected Methods
 
         protected override void StartTimer()
         {
             _isTimerOn = true;
-            _messageService.Publish(new StartTimerServiceMessage<EventHubViewModel>(this, DelayInMiliseconds));
+            _messageService.Publish(new StartTimerServiceMessage<MqttPublisherViewModel>(this, DelayInMiliseconds));
             TimerStatusTitle = _translationsService.GetString("StopTimer");
         }
 
         protected override void StopTimer()
         {
             _isTimerOn = false;
-            _messageService.Publish(new StopTimerServiceMessage<EventHubViewModel>(this));
+            _messageService.Publish(new StopTimerServiceMessage<MqttPublisherViewModel>(this));
             TimerStatusTitle = _translationsService.GetString("StartTimer");
         }
 
         #endregion
 
+        #region Translations
+
+        public string HostNamePlaceholder
+        {
+            get => _translationsService.GetString("MqttPublisherHostName");
+        }
+
+        public string TopicPlaceholder
+        {
+            get => _translationsService.GetString("MqttPublisherTopic");
+        }
+
+        #endregion
+
+        #region Private
+
+        private IMqttPublisherService MqttPublisherService => _publisherService as IMqttPublisherService;
+
+        #endregion
+
         #region Private Methods
 
-        private void HandleStatusChangedMessage(EventHubStatusUpdatedMessage message)
+        private void HandleStatusChangedMessage(MqttPublisherStatusUpdatedMessage message)
         {
             if (!string.IsNullOrEmpty(message.Status))
             {
@@ -196,7 +211,7 @@ namespace MessagePublisher.Core
             }
         }
 
-        private void HandleTimerTrigger(TimerServiceTriggeredMessage<EventHubViewModel> message)
+        private void HandleTimerTrigger(TimerServiceTriggeredMessage<MqttPublisherViewModel> message)
         {
             _ = SendMessagePayload();
         }
