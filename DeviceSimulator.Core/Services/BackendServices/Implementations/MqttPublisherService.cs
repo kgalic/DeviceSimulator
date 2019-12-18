@@ -67,25 +67,30 @@ namespace MessagePublisher.Core
         {
             _mqttClient.Disconnect();
             _mqttClient = null;
+            _isConnected = false;
+            SendConnectionUpdatedMessage();
             return Task.FromResult(true);
         }
 
         public Task SendRequest(string request)
         {
-            request = _messageExpressionService.ParseMessageExpressions(request);
+            if (_isConnected)
+            {
+                request = _messageExpressionService.ParseMessageExpressions(request);
 
-            _mqttClient.Publish(topic: _topic,
-                                message: Encoding.UTF8.GetBytes(request),
-                                qosLevel: MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
-                                retain: false);
+                _mqttClient.Publish(topic: _topic,
+                                    message: Encoding.UTF8.GetBytes(request),
+                                    qosLevel: MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE,
+                                    retain: false);
 
-            var logMessage = string.Format(_translationsService.GetString("MqttPublisherMessageSent"),
-                                          Environment.NewLine,
-                                          request,
-                                          Environment.NewLine);
+                var logMessage = string.Format(_translationsService.GetString("MqttPublisherMessageSent"),
+                                              Environment.NewLine,
+                                              request,
+                                              Environment.NewLine);
 
-            _consoleLoggerService.Log(value: logMessage,
-                                      logType: ConsoleLogTypes.MqttPublisher);
+                _consoleLoggerService.Log(value: logMessage,
+                                          logType: ConsoleLogTypes.MqttPublisher);
+            }
 
             return Task.FromResult(true);
         }
